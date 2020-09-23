@@ -1,0 +1,3 @@
+FROM bitnami/mariadb:10.5.5
+
+ENV ALLOW_EMPTY_PASSWORD=no
