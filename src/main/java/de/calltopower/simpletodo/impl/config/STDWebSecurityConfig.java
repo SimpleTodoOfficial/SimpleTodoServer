@@ -15,6 +15,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import de.calltopower.simpletodo.api.config.STDConfig;
+import de.calltopower.simpletodo.impl.controller.STDConnectionController;
+import de.calltopower.simpletodo.impl.controller.STDUserController;
 import de.calltopower.simpletodo.impl.exception.STDAuthEntryPointJwt;
 import de.calltopower.simpletodo.impl.filter.STDAuthTokenFilter;
 import de.calltopower.simpletodo.impl.service.STDUserDetailsService;
@@ -69,8 +71,9 @@ public class STDWebSecurityConfig extends WebSecurityConfigurerAdapter implement
             .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             .and().authorizeRequests()
                 .antMatchers("/api/auth/**").permitAll()
-                .antMatchers("/api/users/password/forgot").permitAll()
-                .antMatchers("/api/users/password/reset/**").permitAll()
+                .antMatchers(String.format("{}/password/forgot", STDUserController.PATH)).permitAll()
+                .antMatchers(String.format("{}/password/reset/**", STDUserController.PATH)).permitAll()
+                .antMatchers(String.format("{}/available", STDConnectionController.PATH)).permitAll()
                 .anyRequest().authenticated();
         // @formatter:on
 

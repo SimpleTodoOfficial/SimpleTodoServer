@@ -70,7 +70,7 @@ public class STDTodoController implements STDController {
     public Set<STDTodoDto> getAllForList(@NotNull @PathVariable(name = "wsId") String wsId,
             @NotNull @PathVariable(name = "lId") String lId, @AuthenticationPrincipal UserDetails userDetails) {
         if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug(String.format("Requested all todos"));
+            LOGGER.debug("Requested all todos");
         }
 
         return todoDtoService.convert(todoService.getAllTodos(userDetails, wsId, lId));

@@ -98,7 +98,7 @@ task zip(type: Zip, dependsOn: 'bootJar') {
    include 'README.md'
    include 'scripts/*'
    include 'build/libs/*'
-   archiveName 'simpletodo-server-1.0.0.zip'
+   archiveName 'simpletodo-server-1.0.1.zip'
    
     // Flatten the hierarchy by setting the path
     // of all files to their respective basename

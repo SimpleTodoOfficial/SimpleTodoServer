@@ -49,6 +49,41 @@ http://localhost:9090/api/auth/signin
     "password": "password"
 }
 
+## Connection check
+
+### Availability
+
+### Needed role
+
+- -
+
+### Method
+
+GET
+
+### URL
+
+http://localhost:9090/api/connection/available
+
+### Authorized
+
+### Needed role
+
+- Admin
+- User
+
+### Method
+
+GET
+
+### URL
+
+http://localhost:9090/api/connection/authorized
+
+### Headers
+
+Authorization Bearer TOKEN
+
 ## Workspaces
 
 ### Get all for user
