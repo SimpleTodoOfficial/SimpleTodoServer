@@ -592,6 +592,7 @@ http://localhost:9090/api/users/password/forgot
     "username": "User",
     "email": "Email"
 }
+
 ### Reset password
 
 ### Needed role
@@ -605,3 +606,32 @@ PUT
 ### URL
 
 http://localhost:9090/api/users/password/reset/TokenID
+
+### Resend activation
+
+### Needed role
+
+- User
+- Admin
+
+### Method
+
+PUT
+
+### URL
+
+http://localhost:9090/api/users/activate/resend
+
+### Activate
+
+### Needed role
+
+- -
+
+### Method
+
+PUT
+
+### URL
+
+http://localhost:9090/api/users/activate/TokenID

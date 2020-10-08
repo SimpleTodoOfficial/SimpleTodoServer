@@ -143,6 +143,27 @@ public class STDUserController implements STDController {
         userService.resetPassword(id);
     }
 
+    @SuppressWarnings("javadoc")
+    @PutMapping(path = "/activate/resend")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    public void activate(@AuthenticationPrincipal UserDetails userDetails) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Requested resend activation");
+        }
+
+        userService.resendActivation(userDetails);
+    }
+
+    @SuppressWarnings("javadoc")
+    @PutMapping(path = "/activate/{id}")
+    public void activate(@NotNull @PathVariable(name = "id") String id) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Requested activation");
+        }
+
+        userService.activate(id);
+    }
+
     @Override
     public String getPath() {
         return PATH;

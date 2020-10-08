@@ -32,6 +32,9 @@ public class STDSettingsProperties implements STDProperties {
     @Value("${" + PREFIX + ".url-password-reset-success}")
     private String urlPasswordResetSuccess;
 
+    @Value("${" + PREFIX + ".url-user-activation}")
+    private String urlUserActivation;
+
     @Value("${" + PREFIX + ".mail-from}")
     private String mailFrom;
 

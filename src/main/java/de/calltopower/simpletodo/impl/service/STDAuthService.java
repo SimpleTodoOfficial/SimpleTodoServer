@@ -3,7 +3,6 @@ package de.calltopower.simpletodo.impl.service;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -19,13 +18,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import de.calltopower.simpletodo.api.service.STDService;
+import de.calltopower.simpletodo.impl.db.repository.STDUserActivationTokensRepository;
 import de.calltopower.simpletodo.impl.db.repository.STDUserRepository;
 import de.calltopower.simpletodo.impl.enums.STDUserRole;
 import de.calltopower.simpletodo.impl.exception.STDFunctionalException;
+import de.calltopower.simpletodo.impl.exception.STDGeneralException;
 import de.calltopower.simpletodo.impl.exception.STDNotFoundException;
 import de.calltopower.simpletodo.impl.exception.STDUserException;
 import de.calltopower.simpletodo.impl.model.STDRoleModel;
 import de.calltopower.simpletodo.impl.model.STDTokenModel;
+import de.calltopower.simpletodo.impl.model.STDUserActivationTokenModel;
 import de.calltopower.simpletodo.impl.model.STDUserDetailsImpl;
 import de.calltopower.simpletodo.impl.model.STDUserModel;
 import de.calltopower.simpletodo.impl.properties.STDSettingsProperties;
@@ -49,6 +51,7 @@ public class STDAuthService implements STDService {
     private STDSettingsProperties functionalProperties;
     private STDSettingsProperties settingsProperties;
     private STDEmailService emailService;
+    private STDUserActivationTokensRepository userActivationTokensRepository;
 
     /**
      * Initializes the service
@@ -62,7 +65,8 @@ public class STDAuthService implements STDService {
     @Autowired
     public STDAuthService(AuthenticationManager authenticationManager, PasswordEncoder encoder, STDTokenUtils jwtUtils,
             STDUserRepository userRepository, STDRoleService roleService, STDSettingsProperties functionalProperties,
-            STDSettingsProperties settingsProperties, STDEmailService emailService) {
+            STDSettingsProperties settingsProperties, STDEmailService emailService,
+            STDUserActivationTokensRepository userActivationTokensRepository) {
         this.authenticationManager = authenticationManager;
         this.encoder = encoder;
         this.jwtUtils = jwtUtils;
@@ -71,6 +75,7 @@ public class STDAuthService implements STDService {
         this.functionalProperties = functionalProperties;
         this.settingsProperties = settingsProperties;
         this.emailService = emailService;
+        this.userActivationTokensRepository = userActivationTokensRepository;
     }
 
     /**
@@ -129,6 +134,7 @@ public class STDAuthService implements STDService {
         } catch (Exception ex) {
             LOGGER.error("Something went wrong with the email service: ", ex);
         }
+        processUserActivation(user, user.getEmail());
 
         return user;
     }
@@ -162,7 +168,7 @@ public class STDAuthService implements STDService {
         // @formatter:off
         return STDTokenModel.builder()
                 .token(jwt)
-                .user(from(userDetails))
+                .user(authenticate((userDetails)))
                .build();
         // @formatter:off
     }
@@ -223,19 +229,40 @@ public class STDAuthService implements STDService {
         return isAdminOrRequestedUser(authenticate(userDetails), strId);
     }
 
-    private STDUserModel from(STDUserDetailsImpl userDetails) {
-        // @formatter:off
-        Set<String> roles = userDetails.getAuthorities().stream()
-                                                        .map(role -> role.getAuthority())
-                                                        .collect(Collectors.toSet());
-        Set<STDRoleModel> convertedRoles = roleService.convertRoles(roles);
-        return STDUserModel.builder()
-                .id(userDetails.getId())
-                .username(userDetails.getUsername())
-                .email(userDetails.getEmail())
-                .roles(convertedRoles)
-                .build();
-        // @formatter:on
+    // TODO: Duplicate of STDUserService::deleteAllUserActivationTokensForUserId
+    private void deleteAllUserActivationTokensForUserId(UUID userId) {
+        try {
+            for (STDUserActivationTokenModel token : userActivationTokensRepository.findAllByUserId(userId)) {
+                userActivationTokensRepository.deleteById(token.getId());
+            }
+        } catch (Exception ex) {
+            String errMsg = String.format(
+                    "Something went wrong deleting all user activation tokens for user with username \"%s\"", userId);
+            LOGGER.error(errMsg);
+            throw new STDGeneralException(errMsg);
+        }
+    }
+
+    // TODO: Duplicate of STDUserService::processUserActivation
+    private void processUserActivation(STDUserModel user, String email) {
+        LOGGER.debug(String.format("Deleting all old user activation tokens for user with ID \"%s\"", user.getId()));
+        deleteAllUserActivationTokensForUserId(user.getId());
+
+        STDUserActivationTokenModel model = STDUserActivationTokenModel.builder().userId(user.getId()).build();
+        model = userActivationTokensRepository.saveAndFlush(model);
+
+        LOGGER.debug(String.format("Saved user activation token with id \"%s\"", model.getId()));
+
+        String url = String.format(settingsProperties.getUrlUserActivation(), user.getId());
+        String msg = String.format(
+                "Please activate your account email address. Go to \"%s\" and enter the following token: \"%s\"", url,
+                model.getId());
+        LOGGER.info(msg);
+        try {
+            emailService.sendMail(email, "Activate your account", msg);
+        } catch (Exception ex) {
+            LOGGER.error("Something went wrong with the email service: ", ex);
+        }
     }
 
 }

@@ -71,9 +71,10 @@ public class STDWebSecurityConfig extends WebSecurityConfigurerAdapter implement
             .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             .and().authorizeRequests()
                 .antMatchers("/api/auth/**").permitAll()
-                .antMatchers(String.format("{}/password/forgot", STDUserController.PATH)).permitAll()
-                .antMatchers(String.format("{}/password/reset/**", STDUserController.PATH)).permitAll()
-                .antMatchers(String.format("{}/available", STDConnectionController.PATH)).permitAll()
+                .antMatchers(String.format("%s/password/forgot", STDUserController.PATH)).permitAll()
+                .antMatchers(String.format("%s/password/reset/**", STDUserController.PATH)).permitAll()
+                .antMatchers(String.format("%s/activate/**", STDConnectionController.PATH)).permitAll()
+                .antMatchers(String.format("%s/available", STDConnectionController.PATH)).permitAll()
                 .anyRequest().authenticated();
         // @formatter:on
 

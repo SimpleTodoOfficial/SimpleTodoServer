@@ -121,6 +121,50 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "http://localhost:9090/api/users/activate/<TokenID>",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:9090/api/users/activate/<TokenID>",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9090",
+							"path": [
+								"api",
+								"users",
+								"activate",
+								"<TokenID>"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:9090/api/users/activate/resend",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:9090/api/users/activate/resend",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9090",
+							"path": [
+								"api",
+								"users",
+								"activate",
+								"resend"
+							]
+						}
+					},
+					"response": []
 				}
 			],
 			"protocolProfileBehavior": {}

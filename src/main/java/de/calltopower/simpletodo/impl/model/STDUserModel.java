@@ -93,6 +93,9 @@ public class STDUserModel implements Serializable, STDModel {
     @Column(name = "JSON_DATA")
     private String jsonData;
 
+    @Column(name = "STATUS_ACTIVATED")
+    private boolean statusActivated;
+
     @Builder.Default
     @JsonManagedReference
     @ManyToMany(fetch = FetchType.LAZY)

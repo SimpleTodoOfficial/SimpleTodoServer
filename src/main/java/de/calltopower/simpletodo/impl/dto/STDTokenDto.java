@@ -38,6 +38,10 @@ public class STDTokenDto implements STDDto<STDTokenModel> {
 
     @SuppressWarnings("javadoc")
     @JsonProperty
+    public Boolean statusActivated;
+
+    @SuppressWarnings("javadoc")
+    @JsonProperty
     public Set<String> roles;
 
 }

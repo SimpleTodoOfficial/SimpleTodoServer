@@ -30,6 +30,7 @@ public class STDUserDtoService implements STDDtoService<STDUserDto, STDUserModel
                 .id(model.getId())
                 .username(model.getUsername())
                 .email(model.getEmail())
+                .statusActivated(model.isStatusActivated())
                 .roles(getRoleNames(model.getRoles()))
                 .jsonData(model.getJsonData())
                 .build();

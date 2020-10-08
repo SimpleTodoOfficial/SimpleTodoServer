@@ -40,6 +40,7 @@ public class STDTokenDtoService implements STDDtoService<STDTokenDto, STDTokenMo
                 .id(user.getId())
                 .username(user.getUsername())
                 .email(user.getEmail())
+                .statusActivated(user.getStatusActivated())
                 .roles(user.getRoles())
                 .build();
         // @formatter:on
