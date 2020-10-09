@@ -14,7 +14,8 @@ import de.calltopower.simpletodo.api.task.STDSchedulingTask;
 public class STDMonitoringSchedulingTask implements STDSchedulingTask {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(STDMonitoringSchedulingTask.class);
-    // private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd-HH:mm:ss");
+    // private static final SimpleDateFormat dateFormat = new
+    // SimpleDateFormat("yyyy.MM.dd-HH:mm:ss");
 
     // private final long INITIAL_DELAY_UPDATE_MILLIS = 10000;
     // private final long FIXED_RATE_UPDATE_MILLIS = 10 * 30 * 1000;

@@ -340,10 +340,10 @@ public class STDUserService implements STDService {
         LOGGER.debug(String.format("Deleting all old user activation tokens for user with ID \"%s\"", user.getId()));
         deleteAllUserActivationTokensForUserId(user.getId());
 
-        String msg = "Your user has been activated.";
+        String msg = "Your account email address has been verified.";
         LOGGER.info(msg);
         try {
-            emailService.sendMail(user.getEmail(), "Email address activated", msg);
+            emailService.sendMail(user.getEmail(), "Email address verified", msg);
         } catch (Exception ex) {
             LOGGER.error("Something went wrong with the email service: ", ex);
         }
@@ -395,11 +395,11 @@ public class STDUserService implements STDService {
 
         String url = String.format(settingsProperties.getUrlUserActivation(), user.getId());
         String msg = String.format(
-                "Please activate your account email address. Go to \"%s\" and enter the following token: \"%s\"", url,
+                "Please verify your account email address. Go to \"%s\" and enter the following token: \"%s\"", url,
                 model.getId());
         LOGGER.info(msg);
         try {
-            emailService.sendMail(email, "Activate your account", msg);
+            emailService.sendMail(email, "Verify your email address", msg);
         } catch (Exception ex) {
             LOGGER.error("Something went wrong with the email service: ", ex);
         }
