@@ -303,6 +303,31 @@ Authorization Bearer TOKEN
     "name": "Updated name"
 }
 
+### Move
+
+### Needed role
+
+- Admin
+- User
+
+### Method
+
+PUT
+
+### URL
+
+http://localhost:9090/api/workspaces/WSID/lists/LID/move
+
+### Headers
+
+Authorization Bearer TOKEN
+
+### Body
+
+{
+    "workspaceId": "WID"
+}
+
 ### Delete
 
 ### Needed role
@@ -431,6 +456,31 @@ Authorization Bearer TOKEN
 {
     "msg": "Updated name",
     "dueDate": null
+}
+
+### Move
+
+### Needed role
+
+- Admin
+- User
+
+### Method
+
+PUT
+
+### URL
+
+http://localhost:9090/api/workspaces/WSID/lists/LID/todos/TID/move
+
+### Headers
+
+Authorization Bearer TOKEN
+
+### Body
+
+{
+    "listId": "LID"
 }
 
 ### Delete

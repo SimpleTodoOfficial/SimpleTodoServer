@@ -489,6 +489,45 @@
 					"response": []
 				},
 				{
+					"name": "http://localhost:9090/api/workspaces/WID/list/LID/move",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer TOKEN"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"workspaceId\": \"WID\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:9090/api/workspaces/WSID/lists/LID/move",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9090",
+							"path": [
+								"api",
+								"workspaces",
+								"WSID",
+								"lists",
+								"LID",
+								"move"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "http://localhost:9090/api/workspaces/WSID/lists/LID",
 					"request": {
 						"method": "DELETE",
@@ -686,6 +725,47 @@
 								"LID",
 								"todos",
 								"TID"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:9090/api/workspaces/WSID/lists/LID/todos/TID/move",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer TOKEN"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"listId\": \"LID\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:9090/api/workspaces/WSID/lists/LID/todos/TID/move",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9090",
+							"path": [
+								"api",
+								"workspaces",
+								"WSID",
+								"lists",
+								"LID",
+								"todos",
+								"TID",
+								"move"
 							]
 						}
 					},

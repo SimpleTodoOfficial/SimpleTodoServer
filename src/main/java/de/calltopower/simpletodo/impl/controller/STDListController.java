@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 import de.calltopower.simpletodo.api.controller.STDController;
 import de.calltopower.simpletodo.impl.dto.STDListDto;
 import de.calltopower.simpletodo.impl.dtoservice.STDListDtoService;
+import de.calltopower.simpletodo.impl.requestbody.STDListMovementRequestBody;
 import de.calltopower.simpletodo.impl.requestbody.STDListRequestBody;
 import de.calltopower.simpletodo.impl.service.STDListService;
 
@@ -109,6 +110,19 @@ public class STDListController implements STDController {
         }
 
         return listDtoService.convert(listService.updateList(userDetails, wsId, id, requestBody));
+    }
+
+    @SuppressWarnings("javadoc")
+    @PutMapping(path = "/{wsId}/" + PATH_LIST + "/{id}/move", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    public STDListDto moveList(@NotNull @PathVariable(name = "wsId") String wsId,
+            @NotNull @PathVariable(name = "id") String id, @NotNull @RequestBody STDListMovementRequestBody requestBody,
+            @AuthenticationPrincipal UserDetails userDetails) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Requested updating list");
+        }
+
+        return listDtoService.convert(listService.moveList(userDetails, wsId, id, requestBody));
     }
 
     @SuppressWarnings("javadoc")

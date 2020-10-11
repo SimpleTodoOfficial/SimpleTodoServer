@@ -21,6 +21,7 @@ import de.calltopower.simpletodo.impl.exception.STDNotAuthorizedException;
 import de.calltopower.simpletodo.impl.exception.STDNotFoundException;
 import de.calltopower.simpletodo.impl.model.STDListModel;
 import de.calltopower.simpletodo.impl.model.STDTodoModel;
+import de.calltopower.simpletodo.impl.requestbody.STDTodoMovementRequestBody;
 import de.calltopower.simpletodo.impl.requestbody.STDTodoRequestBody;
 
 /**
@@ -190,6 +191,43 @@ public class STDTodoService implements STDService {
         todo.setStatusDone(requestBody.isDone());
         todo.setDateDue(requestBody.getDueDate());
 
+        return todoRepository.saveAndFlush(todo);
+    }
+
+    /**
+     * Moves a list to the given workspace
+     * 
+     * @param userDetails The user authentication
+     * @param wsId        The workspace ID
+     * @param lId         The list ID
+     * @param strId       The list ID
+     * @param requestBody The request body
+     * @return a list
+     */
+    @Transactional(readOnly = false)
+    public STDTodoModel moveTodo(UserDetails userDetails, String wsId, String lId, String strId,
+            STDTodoMovementRequestBody requestBody) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug(String.format(
+                    "Moving todo with ID \"%s\" in list with ID \"%s\" in workspace with ID \"%s\" from request body \"%s\"",
+                    strId, lId, wsId, requestBody));
+        }
+
+        STDListModel currentList = listService.getList(userDetails, wsId, lId);
+        STDTodoModel todo = getTodo(strId);
+        assertTodoInList(currentList, todo);
+
+        if (StringUtils.isBlank(requestBody.getListId())) {
+            throw new STDNotFoundException(String.format("List with ID \"%s\" not found", requestBody.getListId()));
+        }
+        STDListModel newList = listService.getList(userDetails, wsId, requestBody.getListId());
+
+        currentList.getTodos().remove(todo);
+        newList.getTodos().add(todo);
+
+        // listRepository.saveAndFlush(currentList);
+        // listRepository.saveAndFlush(newList);
+        todo.setList(newList);
         return todoRepository.saveAndFlush(todo);
     }
 

@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 import de.calltopower.simpletodo.api.controller.STDController;
 import de.calltopower.simpletodo.impl.dto.STDTodoDto;
 import de.calltopower.simpletodo.impl.dtoservice.STDTodoDtoService;
+import de.calltopower.simpletodo.impl.requestbody.STDTodoMovementRequestBody;
 import de.calltopower.simpletodo.impl.requestbody.STDTodoRequestBody;
 import de.calltopower.simpletodo.impl.service.STDTodoService;
 
@@ -116,6 +117,21 @@ public class STDTodoController implements STDController {
         }
 
         return todoDtoService.convert(todoService.updateTodo(userDetails, wsId, lId, id, requestBody));
+    }
+
+    @SuppressWarnings("javadoc")
+    @PutMapping(path = "/{wsId}/" + STDListController.PATH_LIST + "/{lId}/" + PATH_TODO
+            + "/{id}/move", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    public STDTodoDto moveTodo(@NotNull @PathVariable(name = "wsId") String wsId,
+            @NotNull @PathVariable(name = "lId") String lId, @NotNull @PathVariable(name = "id") String id,
+            @NotNull @RequestBody STDTodoMovementRequestBody requestBody,
+            @AuthenticationPrincipal UserDetails userDetails) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Requested updating todo");
+        }
+
+        return todoDtoService.convert(todoService.moveTodo(userDetails, wsId, lId, id, requestBody));
     }
 
     @SuppressWarnings("javadoc")

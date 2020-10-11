@@ -51,11 +51,13 @@ public class STDUserService implements STDService {
     /**
      * Initializes the service
      * 
-     * @param userRepository   The DB repository
-     * @param roleService      The role service
-     * @param authService      The authentication service
-     * @param workspaceService The workspace service
-     * @param encoder          The encoder
+     * @param userRepository     The DB repository
+     * @param roleService        The role service
+     * @param authService        The authentication service
+     * @param workspaceService   The workspace service
+     * @param settingsProperties The settings properties
+     * @param emailService       The email service
+     * @param encoder            The encoder
      */
     @Autowired
     public STDUserService(STDUserRepository userRepository,

@@ -18,7 +18,9 @@ import de.calltopower.simpletodo.impl.db.repository.STDWorkspaceRepository;
 import de.calltopower.simpletodo.impl.exception.STDNotAuthorizedException;
 import de.calltopower.simpletodo.impl.exception.STDNotFoundException;
 import de.calltopower.simpletodo.impl.model.STDListModel;
+import de.calltopower.simpletodo.impl.model.STDUserModel;
 import de.calltopower.simpletodo.impl.model.STDWorkspaceModel;
+import de.calltopower.simpletodo.impl.requestbody.STDListMovementRequestBody;
 import de.calltopower.simpletodo.impl.requestbody.STDListRequestBody;
 
 /**
@@ -32,6 +34,7 @@ public class STDListService implements STDService {
     private STDListRepository listRepository;
     private STDWorkspaceRepository workspaceRepository;
     private STDWorkspaceService workspaceService;
+    private STDAuthService authService;
 
     /**
      * Initializes the service
@@ -39,13 +42,15 @@ public class STDListService implements STDService {
      * @param listRepository      The DB repository
      * @param workspaceRepository The workspace DB repository
      * @param workspaceService    The workspace service
+     * @param authService         The auth service
      */
     @Autowired
     public STDListService(STDListRepository listRepository, STDWorkspaceRepository workspaceRepository,
-            STDWorkspaceService workspaceService) {
+            STDWorkspaceService workspaceService, STDAuthService authService) {
         this.listRepository = listRepository;
         this.workspaceRepository = workspaceRepository;
         this.workspaceService = workspaceService;
+        this.authService = authService;
     }
 
     /**
@@ -154,6 +159,45 @@ public class STDListService implements STDService {
     }
 
     /**
+     * Moves a list to the given workspace
+     * 
+     * @param userDetails The user authentication
+     * @param wsId        The workspace ID
+     * @param strId       The list ID
+     * @param requestBody The request body
+     * @return a list
+     */
+    @Transactional(readOnly = false)
+    public STDListModel moveList(UserDetails userDetails, String wsId, String strId,
+            STDListMovementRequestBody requestBody) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug(
+                    String.format("Moving list with ID \"%s\" in workspace with ID \"%s\" from request body \"%s\"",
+                            strId, wsId, requestBody));
+        }
+
+        STDWorkspaceModel currentWorkspace = workspaceService.getWorkspace(userDetails, wsId);
+        STDListModel list = getList(strId);
+        assertListInWorkspace(currentWorkspace, list);
+
+        if (StringUtils.isBlank(requestBody.getWorkspaceId())) {
+            throw new STDNotFoundException(
+                    String.format("Workspace with ID \"%s\" not found", requestBody.getWorkspaceId()));
+        }
+        STDWorkspaceModel newWorkspace = workspaceService.getWorkspace(userDetails, requestBody.getWorkspaceId());
+        STDUserModel user = authService.authenticate(userDetails);
+        assertUserInWorkspace(newWorkspace, user);
+
+        currentWorkspace.getLists().remove(list);
+        newWorkspace.getLists().add(list);
+
+        //workspaceRepository.saveAndFlush(currentWorkspace);
+        //workspaceRepository.saveAndFlush(newWorkspace);
+        list.setWorkspace(newWorkspace);
+        return listRepository.saveAndFlush(list);
+    }
+
+    /**
      * Deletes a list from DB
      * 
      * @param userDetails The user authentication
@@ -227,6 +271,16 @@ public class STDListService implements STDService {
         if (!workspace.getLists().contains(list)) {
             String errorMsg = String.format("List with ID \"%s\" is not contained in workspace with ID \"%s\"",
                     list.getId(), workspace.getId());
+            LOGGER.error(errorMsg);
+            throw new STDNotAuthorizedException(errorMsg);
+        }
+    }
+
+    private void assertUserInWorkspace(STDWorkspaceModel workspace, STDUserModel user) {
+        if (!workspace.getUsers().contains(user) && !authService.isAdmin(user)) {
+            String errorMsg = String.format(
+                    "User with username \"%s\" is not allowed to access workspace with ID \"%s\"", user.getUsername(),
+                    workspace.getId());
             LOGGER.error(errorMsg);
             throw new STDNotAuthorizedException(errorMsg);
         }
