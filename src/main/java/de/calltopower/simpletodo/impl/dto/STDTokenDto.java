@@ -38,7 +38,7 @@ public class STDTokenDto implements STDDto<STDTokenModel> {
 
     @SuppressWarnings("javadoc")
     @JsonProperty
-    public Boolean statusActivated;
+    public Boolean statusVerified;
 
     @SuppressWarnings("javadoc")
     @JsonProperty

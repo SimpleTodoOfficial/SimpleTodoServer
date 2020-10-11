@@ -93,8 +93,8 @@ public class STDUserModel implements Serializable, STDModel {
     @Column(name = "JSON_DATA")
     private String jsonData;
 
-    @Column(name = "STATUS_ACTIVATED")
-    private boolean statusActivated;
+    @Column(name = "STATUS_VERIFIED")
+    private boolean statusVerified;
 
     @Builder.Default
     @JsonManagedReference

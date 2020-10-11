@@ -7,17 +7,17 @@ import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import de.calltopower.simpletodo.impl.model.STDUserActivationTokenModel;
+import de.calltopower.simpletodo.impl.model.STDUserVerificationTokenModel;
 
 /**
  * User activation token model repository
  */
 @Repository
-public interface STDUserActivationTokensRepository extends JpaRepository<STDUserActivationTokenModel, UUID> {
+public interface STDUserVerificationTokensRepository extends JpaRepository<STDUserVerificationTokenModel, UUID> {
 
-    Set<STDUserActivationTokenModel> findAllByUserId(UUID id);
+    Set<STDUserVerificationTokenModel> findAllByUserId(UUID id);
 
     @Override
-    Optional<STDUserActivationTokenModel> findById(UUID id);
+    Optional<STDUserVerificationTokenModel> findById(UUID id);
 
 }

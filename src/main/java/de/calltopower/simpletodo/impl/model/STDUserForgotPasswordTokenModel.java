@@ -30,15 +30,15 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-@Table(name = STDForgotPasswordTokenModel.TABLE_NAME)
-public class STDForgotPasswordTokenModel implements Serializable, STDModel {
+@Table(name = STDUserForgotPasswordTokenModel.TABLE_NAME)
+public class STDUserForgotPasswordTokenModel implements Serializable, STDModel {
 
     private static final long serialVersionUID = 2057035435477510762L;
 
     /**
      * The table name
      */
-    public static final String TABLE_NAME = "forgotpasswordtokens";
+    public static final String TABLE_NAME = "user_forgot_password_tokens";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "uuid2")
@@ -53,7 +53,7 @@ public class STDForgotPasswordTokenModel implements Serializable, STDModel {
     public String toString() {
         // @formatter:off
         return String.format(
-                "STDForgotPasswordTokenModel["
+                "STDUserForgotPasswordTokenModel["
                     + "id='%s',"
                     + "userId='%s'"
                 + "]",

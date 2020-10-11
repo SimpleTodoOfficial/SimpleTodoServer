@@ -18,7 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import de.calltopower.simpletodo.api.service.STDService;
-import de.calltopower.simpletodo.impl.db.repository.STDUserActivationTokensRepository;
+import de.calltopower.simpletodo.impl.db.repository.STDUserVerificationTokensRepository;
 import de.calltopower.simpletodo.impl.db.repository.STDUserRepository;
 import de.calltopower.simpletodo.impl.enums.STDUserRole;
 import de.calltopower.simpletodo.impl.exception.STDFunctionalException;
@@ -27,7 +27,7 @@ import de.calltopower.simpletodo.impl.exception.STDNotFoundException;
 import de.calltopower.simpletodo.impl.exception.STDUserException;
 import de.calltopower.simpletodo.impl.model.STDRoleModel;
 import de.calltopower.simpletodo.impl.model.STDTokenModel;
-import de.calltopower.simpletodo.impl.model.STDUserActivationTokenModel;
+import de.calltopower.simpletodo.impl.model.STDUserVerificationTokenModel;
 import de.calltopower.simpletodo.impl.model.STDUserDetailsImpl;
 import de.calltopower.simpletodo.impl.model.STDUserModel;
 import de.calltopower.simpletodo.impl.properties.STDSettingsProperties;
@@ -51,7 +51,7 @@ public class STDAuthService implements STDService {
     private STDSettingsProperties functionalProperties;
     private STDSettingsProperties settingsProperties;
     private STDEmailService emailService;
-    private STDUserActivationTokensRepository userActivationTokensRepository;
+    private STDUserVerificationTokensRepository userActivationTokensRepository;
 
     /**
      * Initializes the service
@@ -66,7 +66,7 @@ public class STDAuthService implements STDService {
     public STDAuthService(AuthenticationManager authenticationManager, PasswordEncoder encoder, STDTokenUtils jwtUtils,
             STDUserRepository userRepository, STDRoleService roleService, STDSettingsProperties functionalProperties,
             STDSettingsProperties settingsProperties, STDEmailService emailService,
-            STDUserActivationTokensRepository userActivationTokensRepository) {
+            STDUserVerificationTokensRepository userActivationTokensRepository) {
         this.authenticationManager = authenticationManager;
         this.encoder = encoder;
         this.jwtUtils = jwtUtils;
@@ -232,7 +232,7 @@ public class STDAuthService implements STDService {
     // TODO: Duplicate of STDUserService::deleteAllUserActivationTokensForUserId
     private void deleteAllUserActivationTokensForUserId(UUID userId) {
         try {
-            for (STDUserActivationTokenModel token : userActivationTokensRepository.findAllByUserId(userId)) {
+            for (STDUserVerificationTokenModel token : userActivationTokensRepository.findAllByUserId(userId)) {
                 userActivationTokensRepository.deleteById(token.getId());
             }
         } catch (Exception ex) {
@@ -248,18 +248,18 @@ public class STDAuthService implements STDService {
         LOGGER.debug(String.format("Deleting all old user activation tokens for user with ID \"%s\"", user.getId()));
         deleteAllUserActivationTokensForUserId(user.getId());
 
-        STDUserActivationTokenModel model = STDUserActivationTokenModel.builder().userId(user.getId()).build();
+        STDUserVerificationTokenModel model = STDUserVerificationTokenModel.builder().userId(user.getId()).build();
         model = userActivationTokensRepository.saveAndFlush(model);
 
         LOGGER.debug(String.format("Saved user activation token with id \"%s\"", model.getId()));
 
-        String url = String.format(settingsProperties.getUrlUserActivation(), user.getId());
+        String url = String.format(settingsProperties.getUrlUserVerification(), user.getId());
         String msg = String.format(
-                "Please activate your account email address. Go to \"%s\" and enter the following token: \"%s\"", url,
+                "Please verify your email address. Go to \"%s\" and enter the following token: \"%s\"", url,
                 model.getId());
         LOGGER.info(msg);
         try {
-            emailService.sendMail(email, "Activate your account", msg);
+            emailService.sendMail(email, "Verify email address", msg);
         } catch (Exception ex) {
             LOGGER.error("Something went wrong with the email service: ", ex);
         }

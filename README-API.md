@@ -620,9 +620,9 @@ PUT
 
 ### URL
 
-http://localhost:9090/api/users/activate/resend
+http://localhost:9090/api/users/verify/resend
 
-### Activate
+### Email Address Verification
 
 ### Needed role
 
@@ -634,4 +634,4 @@ PUT
 
 ### URL
 
-http://localhost:9090/api/users/activate/TokenID
+http://localhost:9090/api/users/verify/TokenID

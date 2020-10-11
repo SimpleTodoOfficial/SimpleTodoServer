@@ -144,24 +144,24 @@ public class STDUserController implements STDController {
     }
 
     @SuppressWarnings("javadoc")
-    @PutMapping(path = "/activate/resend")
+    @PutMapping(path = "/verify/resend")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-    public void activate(@AuthenticationPrincipal UserDetails userDetails) {
+    public void verifyResend(@AuthenticationPrincipal UserDetails userDetails) {
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("Requested resend activation");
         }
 
-        userService.resendActivation(userDetails);
+        userService.resendVerification(userDetails);
     }
 
     @SuppressWarnings("javadoc")
-    @PutMapping(path = "/activate/{id}")
-    public void activate(@NotNull @PathVariable(name = "id") String id) {
+    @PutMapping(path = "/verify/{id}")
+    public void verify(@NotNull @PathVariable(name = "id") String id) {
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("Requested activation");
         }
 
-        userService.activate(id);
+        userService.verify(id);
     }
 
     @Override

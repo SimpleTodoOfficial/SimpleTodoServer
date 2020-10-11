@@ -15,16 +15,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import de.calltopower.simpletodo.api.service.STDService;
-import de.calltopower.simpletodo.impl.db.repository.STDForgotPasswordTokensRepository;
-import de.calltopower.simpletodo.impl.db.repository.STDUserActivationTokensRepository;
+import de.calltopower.simpletodo.impl.db.repository.STDUserForgotPasswordTokensRepository;
+import de.calltopower.simpletodo.impl.db.repository.STDUserVerificationTokensRepository;
 import de.calltopower.simpletodo.impl.db.repository.STDUserRepository;
 import de.calltopower.simpletodo.impl.exception.STDGeneralException;
 import de.calltopower.simpletodo.impl.exception.STDNotAuthorizedException;
 import de.calltopower.simpletodo.impl.exception.STDNotFoundException;
 import de.calltopower.simpletodo.impl.exception.STDUserException;
-import de.calltopower.simpletodo.impl.model.STDForgotPasswordTokenModel;
+import de.calltopower.simpletodo.impl.model.STDUserForgotPasswordTokenModel;
 import de.calltopower.simpletodo.impl.model.STDRoleModel;
-import de.calltopower.simpletodo.impl.model.STDUserActivationTokenModel;
+import de.calltopower.simpletodo.impl.model.STDUserVerificationTokenModel;
 import de.calltopower.simpletodo.impl.model.STDUserModel;
 import de.calltopower.simpletodo.impl.properties.STDSettingsProperties;
 import de.calltopower.simpletodo.impl.requestbody.STDForgotPasswordRequestBody;
@@ -39,8 +39,8 @@ public class STDUserService implements STDService {
     private static final Logger LOGGER = LoggerFactory.getLogger(STDUserService.class);
 
     private STDUserRepository userRepository;
-    private STDForgotPasswordTokensRepository forgotPasswordTokensRepository;
-    private STDUserActivationTokensRepository userActivationTokensRepository;
+    private STDUserForgotPasswordTokensRepository userForgotPasswordTokensRepository;
+    private STDUserVerificationTokensRepository userActivationTokensRepository;
     private STDRoleService roleService;
     private STDAuthService authService;
     private STDWorkspaceService workspaceService;
@@ -59,12 +59,12 @@ public class STDUserService implements STDService {
      */
     @Autowired
     public STDUserService(STDUserRepository userRepository,
-            STDForgotPasswordTokensRepository forgotPasswordTokensRepository,
-            STDUserActivationTokensRepository userActivationTokensRepository, STDRoleService roleService,
+            STDUserForgotPasswordTokensRepository userForgotPasswordTokensRepository,
+            STDUserVerificationTokensRepository userActivationTokensRepository, STDRoleService roleService,
             STDAuthService authService, STDWorkspaceService workspaceService, STDSettingsProperties settingsProperties,
             STDEmailService emailService, PasswordEncoder encoder) {
         this.userRepository = userRepository;
-        this.forgotPasswordTokensRepository = forgotPasswordTokensRepository;
+        this.userForgotPasswordTokensRepository = userForgotPasswordTokensRepository;
         this.userActivationTokensRepository = userActivationTokensRepository;
         this.roleService = roleService;
         this.authService = authService;
@@ -135,7 +135,7 @@ public class STDUserService implements STDService {
             }
             if (StringUtils.isNotBlank(requestBody.getEmail())) {
                 if (!user.getEmail().equals(requestBody.getEmail())) {
-                    user.setStatusActivated(false);
+                    user.setStatusVerified(false);
                     processUserActivation(user, requestBody.getEmail());
                 }
                 user.setEmail(requestBody.getEmail());
@@ -253,10 +253,11 @@ public class STDUserService implements STDService {
 
         LOGGER.debug(
                 String.format("Deleting all old forgot password tokens for user with ID \"%s\"", foundUser.getId()));
-        deleteAllForgotPasswordTokensForUserId(foundUser.getId());
+        deleteAllUserForgotPasswordTokensForUserId(foundUser.getId());
 
-        STDForgotPasswordTokenModel model = STDForgotPasswordTokenModel.builder().userId(foundUser.getId()).build();
-        model = forgotPasswordTokensRepository.saveAndFlush(model);
+        STDUserForgotPasswordTokenModel model = STDUserForgotPasswordTokenModel.builder().userId(foundUser.getId())
+                .build();
+        model = userForgotPasswordTokensRepository.saveAndFlush(model);
 
         LOGGER.debug(String.format("Saved forgot password token with id \"%s\"", model.getId()));
 
@@ -277,7 +278,7 @@ public class STDUserService implements STDService {
             LOGGER.debug(String.format("Processing reset password for \"%s\"", strId));
         }
 
-        STDForgotPasswordTokenModel token = getForgotPasswordToken(strId);
+        STDUserForgotPasswordTokenModel token = getForgotPasswordToken(strId);
 
         STDUserModel user = getUser(token.getUserId());
         String newPassword = String.format("std_pw_%s", UUID.randomUUID().toString());
@@ -290,7 +291,7 @@ public class STDUserService implements STDService {
         userRepository.saveAndFlush(user);
 
         LOGGER.debug(String.format("Deleting all old forgot password tokens for user with ID \"%s\"", user.getId()));
-        deleteAllForgotPasswordTokensForUserId(user.getId());
+        deleteAllUserForgotPasswordTokensForUserId(user.getId());
 
         String msg = String.format(
                 "New temporary password set to \"%s\". Please go to \"%s\", sign in and change it immediately.",
@@ -309,9 +310,9 @@ public class STDUserService implements STDService {
      * @param userDetails The user authentication
      */
     @Transactional(readOnly = false)
-    public void resendActivation(UserDetails userDetails) {
+    public void resendVerification(UserDetails userDetails) {
         if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug(String.format("Resending activation"));
+            LOGGER.debug(String.format("Resending verification"));
         }
 
         @SuppressWarnings("unused")
@@ -321,15 +322,15 @@ public class STDUserService implements STDService {
     }
 
     @Transactional(readOnly = false)
-    public void activate(String strId) {
+    public void verify(String strId) {
         if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug(String.format("Processing activation for \"%s\"", strId));
+            LOGGER.debug(String.format("Processing verification for \"%s\"", strId));
         }
 
-        STDUserActivationTokenModel token = getUserActivationToken(strId);
+        STDUserVerificationTokenModel token = getUserActivationToken(strId);
 
         STDUserModel user = getUser(token.getUserId());
-        user.setStatusActivated(true);
+        user.setStatusVerified(true);
         // JSON validation workaround
         if (StringUtils.isBlank(user.getJsonData())) {
             user.setJsonData("{}");
@@ -340,7 +341,7 @@ public class STDUserService implements STDService {
         LOGGER.debug(String.format("Deleting all old user activation tokens for user with ID \"%s\"", user.getId()));
         deleteAllUserActivationTokensForUserId(user.getId());
 
-        String msg = "Your account email address has been verified.";
+        String msg = "Your email address has been verified.";
         LOGGER.info(msg);
         try {
             emailService.sendMail(user.getEmail(), "Email address verified", msg);
@@ -364,7 +365,7 @@ public class STDUserService implements STDService {
         return userOptional.get();
     }
 
-    private STDForgotPasswordTokenModel getForgotPasswordToken(String strId) {
+    private STDUserForgotPasswordTokenModel getForgotPasswordToken(String strId) {
         UUID uuid;
         try {
             uuid = UUID.fromString(strId);
@@ -374,7 +375,7 @@ public class STDUserService implements STDService {
             throw new STDNotFoundException(errMsg);
         }
 
-        Optional<STDForgotPasswordTokenModel> tokenOptional = forgotPasswordTokensRepository.findById(uuid);
+        Optional<STDUserForgotPasswordTokenModel> tokenOptional = userForgotPasswordTokensRepository.findById(uuid);
         if (!tokenOptional.isPresent()) {
             String errMsg = String.format("Could not find forgot password token with ID \"%s\"", strId);
             LOGGER.error(errMsg);
@@ -388,14 +389,14 @@ public class STDUserService implements STDService {
         LOGGER.debug(String.format("Deleting all old user activation tokens for user with ID \"%s\"", user.getId()));
         deleteAllUserActivationTokensForUserId(user.getId());
 
-        STDUserActivationTokenModel model = STDUserActivationTokenModel.builder().userId(user.getId()).build();
+        STDUserVerificationTokenModel model = STDUserVerificationTokenModel.builder().userId(user.getId()).build();
         model = userActivationTokensRepository.saveAndFlush(model);
 
         LOGGER.debug(String.format("Saved user activation token with id \"%s\"", model.getId()));
 
-        String url = String.format(settingsProperties.getUrlUserActivation(), user.getId());
+        String url = String.format(settingsProperties.getUrlUserVerification(), user.getId());
         String msg = String.format(
-                "Please verify your account email address. Go to \"%s\" and enter the following token: \"%s\"", url,
+                "Please verify your email address. Go to \"%s\" and enter the following token: \"%s\"", url,
                 model.getId());
         LOGGER.info(msg);
         try {
@@ -405,7 +406,7 @@ public class STDUserService implements STDService {
         }
     }
 
-    private STDUserActivationTokenModel getUserActivationToken(String strId) {
+    private STDUserVerificationTokenModel getUserActivationToken(String strId) {
         UUID uuid;
         try {
             uuid = UUID.fromString(strId);
@@ -415,7 +416,7 @@ public class STDUserService implements STDService {
             throw new STDNotFoundException(errMsg);
         }
 
-        Optional<STDUserActivationTokenModel> tokenOptional = userActivationTokensRepository.findById(uuid);
+        Optional<STDUserVerificationTokenModel> tokenOptional = userActivationTokensRepository.findById(uuid);
         if (!tokenOptional.isPresent()) {
             String errMsg = String.format("Could not find user activation token with ID \"%s\"", strId);
             LOGGER.error(errMsg);
@@ -425,10 +426,10 @@ public class STDUserService implements STDService {
         return tokenOptional.get();
     }
 
-    private void deleteAllForgotPasswordTokensForUserId(UUID userId) {
+    private void deleteAllUserForgotPasswordTokensForUserId(UUID userId) {
         try {
-            for (STDForgotPasswordTokenModel token : forgotPasswordTokensRepository.findAllByUserId(userId)) {
-                forgotPasswordTokensRepository.deleteById(token.getId());
+            for (STDUserForgotPasswordTokenModel token : userForgotPasswordTokensRepository.findAllByUserId(userId)) {
+                userForgotPasswordTokensRepository.deleteById(token.getId());
             }
         } catch (Exception ex) {
             String errMsg = String.format(
@@ -440,7 +441,7 @@ public class STDUserService implements STDService {
 
     private void deleteAllUserActivationTokensForUserId(UUID userId) {
         try {
-            for (STDUserActivationTokenModel token : userActivationTokensRepository.findAllByUserId(userId)) {
+            for (STDUserVerificationTokenModel token : userActivationTokensRepository.findAllByUserId(userId)) {
                 userActivationTokensRepository.deleteById(token.getId());
             }
         } catch (Exception ex) {

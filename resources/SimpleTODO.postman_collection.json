@@ -123,12 +123,12 @@
 					"response": []
 				},
 				{
-					"name": "http://localhost:9090/api/users/activate/<TokenID>",
+					"name": "http://localhost:9090/api/users/verify/<TokenID>",
 					"request": {
 						"method": "PUT",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:9090/api/users/activate/<TokenID>",
+							"raw": "http://localhost:9090/api/users/verify/<TokenID>",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -137,7 +137,7 @@
 							"path": [
 								"api",
 								"users",
-								"activate",
+								"verify",
 								"<TokenID>"
 							]
 						}
@@ -145,12 +145,12 @@
 					"response": []
 				},
 				{
-					"name": "http://localhost:9090/api/users/activate/resend",
+					"name": "http://localhost:9090/api/users/verify/resend",
 					"request": {
 						"method": "PUT",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:9090/api/users/activate/resend",
+							"raw": "http://localhost:9090/api/users/verify/resend",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -159,7 +159,7 @@
 							"path": [
 								"api",
 								"users",
-								"activate",
+								"verify",
 								"resend"
 							]
 						}

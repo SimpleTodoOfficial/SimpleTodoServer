@@ -34,7 +34,7 @@ public class STDUserDto implements STDDto<STDUserModel> {
 
     @SuppressWarnings("javadoc")
     @JsonProperty
-    public Boolean statusActivated;
+    public Boolean statusVerified;
 
     @SuppressWarnings("javadoc")
     @JsonProperty
