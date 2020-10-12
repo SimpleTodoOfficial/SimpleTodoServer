@@ -18,8 +18,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import de.calltopower.simpletodo.api.service.STDService;
-import de.calltopower.simpletodo.impl.db.repository.STDUserVerificationTokensRepository;
 import de.calltopower.simpletodo.impl.db.repository.STDUserRepository;
+import de.calltopower.simpletodo.impl.db.repository.STDUserVerificationTokensRepository;
 import de.calltopower.simpletodo.impl.enums.STDUserRole;
 import de.calltopower.simpletodo.impl.exception.STDFunctionalException;
 import de.calltopower.simpletodo.impl.exception.STDGeneralException;
@@ -27,9 +27,9 @@ import de.calltopower.simpletodo.impl.exception.STDNotFoundException;
 import de.calltopower.simpletodo.impl.exception.STDUserException;
 import de.calltopower.simpletodo.impl.model.STDRoleModel;
 import de.calltopower.simpletodo.impl.model.STDTokenModel;
-import de.calltopower.simpletodo.impl.model.STDUserVerificationTokenModel;
 import de.calltopower.simpletodo.impl.model.STDUserDetailsImpl;
 import de.calltopower.simpletodo.impl.model.STDUserModel;
+import de.calltopower.simpletodo.impl.model.STDUserVerificationTokenModel;
 import de.calltopower.simpletodo.impl.properties.STDSettingsProperties;
 import de.calltopower.simpletodo.impl.requestbody.STDSigninRequestBody;
 import de.calltopower.simpletodo.impl.requestbody.STDSignupRequestBody;
@@ -49,7 +49,6 @@ public class STDAuthService implements STDService {
     private STDUserRepository userRepository;
     private STDRoleService roleService;
     private STDSettingsProperties functionalProperties;
-    private STDSettingsProperties settingsProperties;
     private STDEmailService emailService;
     private STDUserVerificationTokensRepository userActivationTokensRepository;
 
@@ -65,15 +64,13 @@ public class STDAuthService implements STDService {
     @Autowired
     public STDAuthService(AuthenticationManager authenticationManager, PasswordEncoder encoder, STDTokenUtils jwtUtils,
             STDUserRepository userRepository, STDRoleService roleService, STDSettingsProperties functionalProperties,
-            STDSettingsProperties settingsProperties, STDEmailService emailService,
-            STDUserVerificationTokensRepository userActivationTokensRepository) {
+            STDEmailService emailService, STDUserVerificationTokensRepository userActivationTokensRepository) {
         this.authenticationManager = authenticationManager;
         this.encoder = encoder;
         this.jwtUtils = jwtUtils;
         this.userRepository = userRepository;
         this.roleService = roleService;
         this.functionalProperties = functionalProperties;
-        this.settingsProperties = settingsProperties;
         this.emailService = emailService;
         this.userActivationTokensRepository = userActivationTokensRepository;
     }
@@ -125,15 +122,7 @@ public class STDAuthService implements STDService {
 
         user = userRepository.saveAndFlush(user);
 
-        try {
-            String msg = String.format(
-                    "A SimpleTodo account has been created for you. Please navigate to \"%s\" to sign in with your username \"%s\".",
-                    settingsProperties.getUrl(), user.getUsername());
-            LOGGER.info(msg);
-            emailService.sendMail(user.getEmail(), "Account created", msg);
-        } catch (Exception ex) {
-            LOGGER.error("Something went wrong with the email service: ", ex);
-        }
+        sendEmailAccountCreated(user);
         processUserActivation(user, user.getEmail());
 
         return user;
@@ -229,6 +218,25 @@ public class STDAuthService implements STDService {
         return isAdminOrRequestedUser(authenticate(userDetails), strId);
     }
 
+    private void sendEmailAccountCreated(STDUserModel user) {
+        LOGGER.debug("Sending account created email");
+        try {
+            emailService.sendAccountCreatedEmail(user.getEmail(), user);
+        } catch (Exception ex) {
+            LOGGER.error("Something went wrong with the email service: ", ex);
+        }
+    }
+
+    // TODO: Duplicate of STDUserService::sendEmailVerifyEmailAddress
+    private void sendEmailVerifyEmailAddress(STDUserModel user, String newEmail, STDUserVerificationTokenModel model) {
+        LOGGER.debug("Sending verify email address email");
+        try {
+            emailService.sendVerifyEmailAddressEmail(newEmail, user, model);
+        } catch (Exception ex) {
+            LOGGER.error("Something went wrong with the email service: ", ex);
+        }
+    }
+
     // TODO: Duplicate of STDUserService::deleteAllUserActivationTokensForUserId
     private void deleteAllUserActivationTokensForUserId(UUID userId) {
         try {
@@ -244,7 +252,7 @@ public class STDAuthService implements STDService {
     }
 
     // TODO: Duplicate of STDUserService::processUserActivation
-    private void processUserActivation(STDUserModel user, String email) {
+    private void processUserActivation(STDUserModel user, String newEmail) {
         LOGGER.debug(String.format("Deleting all old user activation tokens for user with ID \"%s\"", user.getId()));
         deleteAllUserActivationTokensForUserId(user.getId());
 
@@ -253,16 +261,7 @@ public class STDAuthService implements STDService {
 
         LOGGER.debug(String.format("Saved user activation token with id \"%s\"", model.getId()));
 
-        String url = String.format(settingsProperties.getUrlUserVerification(), user.getId());
-        String msg = String.format(
-                "Please verify your email address. Go to \"%s\" and enter the following token: \"%s\"", url,
-                model.getId());
-        LOGGER.info(msg);
-        try {
-            emailService.sendMail(email, "Verify email address", msg);
-        } catch (Exception ex) {
-            LOGGER.error("Something went wrong with the email service: ", ex);
-        }
+        sendEmailVerifyEmailAddress(user, newEmail, model);
     }
 
 }

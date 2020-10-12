@@ -16,17 +16,16 @@ import org.springframework.transaction.annotation.Transactional;
 
 import de.calltopower.simpletodo.api.service.STDService;
 import de.calltopower.simpletodo.impl.db.repository.STDUserForgotPasswordTokensRepository;
-import de.calltopower.simpletodo.impl.db.repository.STDUserVerificationTokensRepository;
 import de.calltopower.simpletodo.impl.db.repository.STDUserRepository;
+import de.calltopower.simpletodo.impl.db.repository.STDUserVerificationTokensRepository;
 import de.calltopower.simpletodo.impl.exception.STDGeneralException;
 import de.calltopower.simpletodo.impl.exception.STDNotAuthorizedException;
 import de.calltopower.simpletodo.impl.exception.STDNotFoundException;
 import de.calltopower.simpletodo.impl.exception.STDUserException;
-import de.calltopower.simpletodo.impl.model.STDUserForgotPasswordTokenModel;
 import de.calltopower.simpletodo.impl.model.STDRoleModel;
-import de.calltopower.simpletodo.impl.model.STDUserVerificationTokenModel;
+import de.calltopower.simpletodo.impl.model.STDUserForgotPasswordTokenModel;
 import de.calltopower.simpletodo.impl.model.STDUserModel;
-import de.calltopower.simpletodo.impl.properties.STDSettingsProperties;
+import de.calltopower.simpletodo.impl.model.STDUserVerificationTokenModel;
 import de.calltopower.simpletodo.impl.requestbody.STDForgotPasswordRequestBody;
 import de.calltopower.simpletodo.impl.requestbody.STDUserRequestBody;
 
@@ -44,34 +43,31 @@ public class STDUserService implements STDService {
     private STDRoleService roleService;
     private STDAuthService authService;
     private STDWorkspaceService workspaceService;
-    private STDSettingsProperties settingsProperties;
     private STDEmailService emailService;
     private PasswordEncoder encoder;
 
     /**
      * Initializes the service
      * 
-     * @param userRepository     The DB repository
-     * @param roleService        The role service
-     * @param authService        The authentication service
-     * @param workspaceService   The workspace service
-     * @param settingsProperties The settings properties
-     * @param emailService       The email service
-     * @param encoder            The encoder
+     * @param userRepository   The DB repository
+     * @param roleService      The role service
+     * @param authService      The authentication service
+     * @param workspaceService The workspace service
+     * @param emailService     The email service
+     * @param encoder          The encoder
      */
     @Autowired
     public STDUserService(STDUserRepository userRepository,
             STDUserForgotPasswordTokensRepository userForgotPasswordTokensRepository,
             STDUserVerificationTokensRepository userActivationTokensRepository, STDRoleService roleService,
-            STDAuthService authService, STDWorkspaceService workspaceService, STDSettingsProperties settingsProperties,
-            STDEmailService emailService, PasswordEncoder encoder) {
+            STDAuthService authService, STDWorkspaceService workspaceService, STDEmailService emailService,
+            PasswordEncoder encoder) {
         this.userRepository = userRepository;
         this.userForgotPasswordTokensRepository = userForgotPasswordTokensRepository;
         this.userActivationTokensRepository = userActivationTokensRepository;
         this.roleService = roleService;
         this.authService = authService;
         this.workspaceService = workspaceService;
-        this.settingsProperties = settingsProperties;
         this.emailService = emailService;
         this.encoder = encoder;
     }
@@ -188,6 +184,8 @@ public class STDUserService implements STDService {
                 // @formatter:on
                 workspaceService.deleteWorkspaces(userDetails, workspaceIDs);
                 userRepository.deleteById(UUID.fromString(strId));
+                deleteAllUserForgotPasswordTokensForUserId(user.getId());
+                deleteAllUserActivationTokensForUserId(user.getId());
                 // TODO: Make sure one admin exists
             } catch (Exception ex) {
                 String errMsg = String.format("Could not delete user with ID \"%d\"", strId);
@@ -218,6 +216,8 @@ public class STDUserService implements STDService {
 
         try {
             userRepository.deleteAll();
+            userForgotPasswordTokensRepository.deleteAll();
+            userActivationTokensRepository.deleteAll();
             // TODO: Make sure one admin exists
         } catch (Exception ex) {
             String errMsg = String.format("Could not delete all users");
@@ -263,15 +263,7 @@ public class STDUserService implements STDService {
 
         LOGGER.debug(String.format("Saved forgot password token with id \"%s\"", model.getId()));
 
-        String msg = String.format(
-                "Your password reset token has been generated. Please go to \"%s\" and enter the following token: \"%s\"",
-                settingsProperties.getUrlPasswordReset(), model.getId());
-        LOGGER.info(msg);
-        try {
-            emailService.sendMail(foundUser.getEmail(), "Password Reset Token generated", msg);
-        } catch (Exception ex) {
-            LOGGER.error("Something went wrong with the email service: ", ex);
-        }
+        sendEmailForgotPassword(foundUser, model);
     }
 
     @Transactional(readOnly = false)
@@ -295,15 +287,7 @@ public class STDUserService implements STDService {
         LOGGER.debug(String.format("Deleting all old forgot password tokens for user with ID \"%s\"", user.getId()));
         deleteAllUserForgotPasswordTokensForUserId(user.getId());
 
-        String msg = String.format(
-                "New temporary password set to \"%s\". Please go to \"%s\", sign in and change it immediately.",
-                newPassword, settingsProperties.getUrlPasswordResetSuccess());
-        LOGGER.info(msg);
-        try {
-            emailService.sendMail(user.getEmail(), "New Password generated", msg);
-        } catch (Exception ex) {
-            LOGGER.error("Something went wrong with the email service: ", ex);
-        }
+        sendEmailNewPasswordGenerated(user, newPassword);
     }
 
     /**
@@ -343,13 +327,7 @@ public class STDUserService implements STDService {
         LOGGER.debug(String.format("Deleting all old user activation tokens for user with ID \"%s\"", user.getId()));
         deleteAllUserActivationTokensForUserId(user.getId());
 
-        String msg = "Your email address has been verified.";
-        LOGGER.info(msg);
-        try {
-            emailService.sendMail(user.getEmail(), "Email address verified", msg);
-        } catch (Exception ex) {
-            LOGGER.error("Something went wrong with the email service: ", ex);
-        }
+        sendEmailEmailAddressVerified(user);
     }
 
     private STDUserModel getUser(String strId) {
@@ -365,6 +343,42 @@ public class STDUserService implements STDService {
         }
 
         return userOptional.get();
+    }
+
+    private void sendEmailForgotPassword(STDUserModel user, STDUserForgotPasswordTokenModel model) {
+        LOGGER.debug("Sending forgot password email");
+        try {
+            emailService.sendPasswordForgotEmail(user.getEmail(), model);
+        } catch (Exception ex) {
+            LOGGER.error("Something went wrong with the email service: ", ex);
+        }
+    }
+
+    private void sendEmailNewPasswordGenerated(STDUserModel user, String newPassword) {
+        LOGGER.debug("Sending new password generated email");
+        try {
+            emailService.sendNewPasswordGeneratedEmail(user.getEmail(), newPassword);
+        } catch (Exception ex) {
+            LOGGER.error("Something went wrong with the email service: ", ex);
+        }
+    }
+
+    private void sendEmailVerifyEmailAddress(STDUserModel user, String newEmail, STDUserVerificationTokenModel model) {
+        LOGGER.debug("Sending verify email address email");
+        try {
+            emailService.sendVerifyEmailAddressEmail(newEmail, user, model);
+        } catch (Exception ex) {
+            LOGGER.error("Something went wrong with the email service: ", ex);
+        }
+    }
+
+    private void sendEmailEmailAddressVerified(STDUserModel user) {
+        LOGGER.debug("Sending email address verified email");
+        try {
+            emailService.sendEmailAddressverifiedEmail(user.getEmail());
+        } catch (Exception ex) {
+            LOGGER.error("Something went wrong with the email service: ", ex);
+        }
     }
 
     private STDUserForgotPasswordTokenModel getForgotPasswordToken(String strId) {
@@ -387,7 +401,7 @@ public class STDUserService implements STDService {
         return tokenOptional.get();
     }
 
-    private void processUserActivation(STDUserModel user, String email) {
+    private void processUserActivation(STDUserModel user, String newEmail) {
         LOGGER.debug(String.format("Deleting all old user activation tokens for user with ID \"%s\"", user.getId()));
         deleteAllUserActivationTokensForUserId(user.getId());
 
@@ -396,16 +410,7 @@ public class STDUserService implements STDService {
 
         LOGGER.debug(String.format("Saved user activation token with id \"%s\"", model.getId()));
 
-        String url = String.format(settingsProperties.getUrlUserVerification(), user.getId());
-        String msg = String.format(
-                "Please verify your email address. Go to \"%s\" and enter the following token: \"%s\"", url,
-                model.getId());
-        LOGGER.info(msg);
-        try {
-            emailService.sendMail(email, "Verify your email address", msg);
-        } catch (Exception ex) {
-            LOGGER.error("Something went wrong with the email service: ", ex);
-        }
+        sendEmailVerifyEmailAddress(user, newEmail, model);
     }
 
     private STDUserVerificationTokenModel getUserActivationToken(String strId) {
