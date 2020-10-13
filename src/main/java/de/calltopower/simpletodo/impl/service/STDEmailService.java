@@ -66,7 +66,7 @@ public class STDEmailService implements STDService {
             MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage);
             messageHelper.setFrom(settingsProperties.getMailFrom());
             messageHelper.setTo(toEmail);
-            messageHelper.setSubject("SimpleTodo: Passwort-Zurücksetzen-Token generiert / Password Reset Token generated");
+            messageHelper.setSubject("SimpleTodo: Passwort-ZurÃ¼cksetzen-Token generiert / Password Reset Token generated");
             String content = emailTemplateService.buildForgotPassword(model.getId().toString());
             messageHelper.setText(content, true);
         };
