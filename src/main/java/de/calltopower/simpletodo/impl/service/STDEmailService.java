@@ -45,7 +45,7 @@ public class STDEmailService implements STDService {
             MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage);
             messageHelper.setFrom(settingsProperties.getMailFrom());
             messageHelper.setTo(toEmail);
-            messageHelper.setSubject("SimpleTodo: Account created");
+            messageHelper.setSubject("SimpleTodo: Account erstellt / Account created");
             String content = emailTemplateService.buildAccountCreated(user.getUsername());
             messageHelper.setText(content, true);
         };
@@ -66,7 +66,7 @@ public class STDEmailService implements STDService {
             MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage);
             messageHelper.setFrom(settingsProperties.getMailFrom());
             messageHelper.setTo(toEmail);
-            messageHelper.setSubject("SimpleTodo: Password Reset Token generated");
+            messageHelper.setSubject("SimpleTodo: Passwort-Zurücksetzen-Token generiert / Password Reset Token generated");
             String content = emailTemplateService.buildForgotPassword(model.getId().toString());
             messageHelper.setText(content, true);
         };
@@ -87,7 +87,7 @@ public class STDEmailService implements STDService {
             MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage);
             messageHelper.setFrom(settingsProperties.getMailFrom());
             messageHelper.setTo(toEmail);
-            messageHelper.setSubject("SimpleTodo: New Password generated");
+            messageHelper.setSubject("SimpleTodo: Neues Passwort generiert / New Password generated");
             String content = emailTemplateService.buildNewPasswordGenerated(newPassword);
             messageHelper.setText(content, true);
         };
@@ -109,7 +109,7 @@ public class STDEmailService implements STDService {
             MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage);
             messageHelper.setFrom(settingsProperties.getMailFrom());
             messageHelper.setTo(toEmail);
-            messageHelper.setSubject("SimpleTodo: Verify your email address");
+            messageHelper.setSubject("SimpleTodo: Verifiziere deine E-Mail-Adresse / Verify your email address");
             String content = emailTemplateService.buildVerifyEmailAddress(user.getId().toString(),
                     model.getId().toString());
             messageHelper.setText(content, true);
@@ -130,7 +130,7 @@ public class STDEmailService implements STDService {
             MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage);
             messageHelper.setFrom(settingsProperties.getMailFrom());
             messageHelper.setTo(toEmail);
-            messageHelper.setSubject("SimpleTodo: Email address verified");
+            messageHelper.setSubject("SimpleTodo: E-Mail-Adresse verifiziert / Email address verified");
             String content = emailTemplateService.buildEmailAddressVerified();
             messageHelper.setText(content, true);
         };
