@@ -16,6 +16,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import de.calltopower.simpletodo.api.config.STDConfig;
 import de.calltopower.simpletodo.impl.controller.STDConnectionController;
+import de.calltopower.simpletodo.impl.controller.STDI18nController;
 import de.calltopower.simpletodo.impl.controller.STDUserController;
 import de.calltopower.simpletodo.impl.exception.STDAuthEntryPointJwt;
 import de.calltopower.simpletodo.impl.filter.STDAuthTokenFilter;
@@ -75,6 +76,7 @@ public class STDWebSecurityConfig extends WebSecurityConfigurerAdapter implement
                 .antMatchers(String.format("%s/password/reset/**", STDUserController.PATH)).permitAll()
                 .antMatchers(String.format("%s/activate/**", STDConnectionController.PATH)).permitAll()
                 .antMatchers(String.format("%s/available", STDConnectionController.PATH)).permitAll()
+                .antMatchers(String.format("%s/**", STDI18nController.PATH)).permitAll()
                 .anyRequest().authenticated();
         // @formatter:on
 

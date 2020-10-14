@@ -84,6 +84,36 @@ http://localhost:9090/api/connection/authorized
 
 Authorization Bearer TOKEN
 
+## I18n
+
+### All languages
+
+### Needed role
+
+- -
+
+### Method
+
+GET
+
+### URL
+
+http://localhost:9090/api/i18n/languages
+
+### Specific language file
+
+### Needed role
+
+- -
+
+### Method
+
+GET
+
+### URL
+
+http://localhost:9090/api/i18n/languages/LANGID
+
 ## Workspaces
 
 ### Get all for user
