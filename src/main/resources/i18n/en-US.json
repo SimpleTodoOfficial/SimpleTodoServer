@@ -11,6 +11,8 @@
     "app.component.account_verification": "Account verification",
     "app.component.error.user.load": "User could not be loaded",
     "app.component.info.sign_out": "Signed out successfully",
+    "app.component.error.language_load": "Language information could not be loaded.",
+    "app.component.error.language_load": "Language translations could not be loaded.",
     "app.error.not_accessible": "The request ressource is not accessible.",
     "app.error.something_went_wrong": "Something went wrong.",
     "app.roles.ADMIN": "Administrator",

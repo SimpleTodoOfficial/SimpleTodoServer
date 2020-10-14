@@ -1,7 +1,5 @@
 package de.calltopower.simpletodo.impl.controller;
 
-import java.util.Map;
-
 import javax.validation.constraints.NotNull;
 
 import org.slf4j.Logger;
@@ -14,6 +12,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import de.calltopower.simpletodo.api.controller.STDController;
+import de.calltopower.simpletodo.impl.dto.STDLanguagesDto;
+import de.calltopower.simpletodo.impl.dto.STDTranslationsDto;
+import de.calltopower.simpletodo.impl.dtoservice.STDLanguagesDtoService;
+import de.calltopower.simpletodo.impl.dtoservice.STDTranslationsDtoService;
 import de.calltopower.simpletodo.impl.service.STDI18nService;
 
 /**
@@ -31,35 +33,42 @@ public class STDI18nController implements STDController {
     private static final Logger LOGGER = LoggerFactory.getLogger(STDI18nController.class);
 
     private STDI18nService i18nService;
+    private STDLanguagesDtoService languagesDtoService;
+    private STDTranslationsDtoService translationsDtoService;
 
     /**
      * Initializes the controller
      * 
-     * @param userDtoService Injected DTO service
+     * @param userDtoService         Injected service
+     * @param languagesDtoService    Injected languages DTO service
+     * @param translationsDtoService Injected translations DTO service
      */
     @Autowired
-    public STDI18nController(STDI18nService i18nService) {
+    public STDI18nController(STDI18nService i18nService, STDLanguagesDtoService languagesDtoService,
+            STDTranslationsDtoService translationsDtoService) {
         this.i18nService = i18nService;
+        this.languagesDtoService = languagesDtoService;
+        this.translationsDtoService = translationsDtoService;
     }
 
     @SuppressWarnings("javadoc")
     @GetMapping(path = "/languages", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public Map<String, String> getLanguages() {
+    public STDLanguagesDto getLanguages() {
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("Requested languages");
         }
 
-        return i18nService.getLanguages();
+        return languagesDtoService.convert(i18nService.getLanguages());
     }
 
     @SuppressWarnings("javadoc")
     @GetMapping(path = "/languages/{id}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public String getLanguageFile(@NotNull @PathVariable(name = "id") String id) {
+    public STDTranslationsDto getTranslations(@NotNull @PathVariable(name = "id") String id) {
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("Requested language");
         }
 
-        return i18nService.getLanguageFile(id);
+        return translationsDtoService.convert(i18nService.getLanguageFile(id));
     }
 
     @Override

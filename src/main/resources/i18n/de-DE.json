@@ -11,6 +11,8 @@
     "app.component.account_verification": "Account-Verifizierung",
     "app.component.error.user.load": "Nutzer konnte nicht geladen werden",
     "app.component.info.sign_out": "Erfolgreich abgemeldet",
+    "app.component.error.language_load": "Sprach-Informationen konnten nicht geladen werden.",
+    "app.component.error.language_load": "Sprach-Übersetzungen konnten nicht geladen werden.",
     "app.error.not_accessible": "Die angeforderte Rssource ist nicht verfügbar.",
     "app.error.something_went_wrong": "Etwas ist schief gelaufen.",
     "app.roles.ADMIN": "Administrator",
