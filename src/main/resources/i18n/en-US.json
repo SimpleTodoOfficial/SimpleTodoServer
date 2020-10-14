@@ -242,7 +242,7 @@
     "workspaces.details.component.modal.remove_user.header": "Confirm user removal from workspace",
     "workspaces.details.component.modal.remove_user.text": "Are you sure that you want to remove the user \"%userName%\" from the workspace \"%wsName%\"?",
     "workspaces.details.component.modal.remove_user.text2": "The user will not have any access to lists or todos in this workspace any more.",
-    "workspaces.details.component.modal.remove_user.textDanger": "",
+    "workspaces.details.component.modal.remove_user.textDanger": "If this is the last user of the workspace, the workspace including all lists and todos will be deleted as well.",
     "workspaces.details.component.success.workspace_delete": "Workspace \"%wsName%\" deleted.",
     "workspaces.details.component.error.workspace_delete": "Workspace \"%wsName%\" could not be deleted.",
     "workspaces.list.component.workspaces": "Workspaces",
