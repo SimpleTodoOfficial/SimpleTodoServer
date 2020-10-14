@@ -19,7 +19,7 @@
     "about.component.developer": "Entwickler",
     "about.component.problem_reporting": "Problem melden",
     "about.component.issue_tracker": "Bug- und Problemfall-Meldungen",
-    "connection.service.signed_out": "Du wurdest abgemeldet, da die Sitzung ausgelaufen ist. Bitte melde dich erneut an.",
+    "connection.service.signed_out": "Du wurdest abgemeldet, da die Sitzung abgelaufen ist. Bitte melde dich erneut an.",
     "entertoken.component.enter_token": "Token eingeben",
     "entertoken.component.token": "Token",
     "entertoken.component.placeholder.enter_token": "Token eingeben",
