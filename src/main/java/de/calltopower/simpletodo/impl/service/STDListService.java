@@ -191,8 +191,8 @@ public class STDListService implements STDService {
         currentWorkspace.getLists().remove(list);
         newWorkspace.getLists().add(list);
 
-        //workspaceRepository.saveAndFlush(currentWorkspace);
-        //workspaceRepository.saveAndFlush(newWorkspace);
+        // workspaceRepository.saveAndFlush(currentWorkspace);
+        // workspaceRepository.saveAndFlush(newWorkspace);
         list.setWorkspace(newWorkspace);
         return listRepository.saveAndFlush(list);
     }
@@ -227,30 +227,6 @@ public class STDListService implements STDService {
             workspaceRepository.saveAndFlush(workspace);
         } catch (Exception ex) {
             String errMsg = String.format("Could not delete list with ID \"%s\"", strId);
-            LOGGER.error(errMsg);
-            throw new STDNotFoundException(errMsg);
-        }
-    }
-
-    /**
-     * Deletes all lists of a workspace from DB
-     * 
-     * @param userDetails The user authentication
-     * @param wsId        The workspace ID
-     */
-    @Transactional(readOnly = false)
-    public void deleteAllListInWorkspace(UserDetails userDetails, String wsId) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug(String.format("Deleting all lists in workspace with ID \"%s\"", wsId));
-        }
-
-        STDWorkspaceModel workspace = workspaceService.getWorkspace(userDetails, wsId);
-
-        try {
-            workspace.getLists().clear();
-            workspaceRepository.saveAndFlush(workspace);
-        } catch (Exception ex) {
-            String errMsg = String.format("Could not delete lists in workspace with ID \"%s\"", wsId);
             LOGGER.error(errMsg);
             throw new STDNotFoundException(errMsg);
         }

@@ -115,17 +115,6 @@ public class STDWorkspaceController implements STDController {
         workspaceService.deleteWorkspace(userDetails, id);
     }
 
-    @SuppressWarnings("javadoc")
-    @DeleteMapping(path = "")
-    @PreAuthorize("hasRole('ADMIN')")
-    public void deleteWorkspaces(@AuthenticationPrincipal UserDetails userDetails) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Requested deleting all workspaces");
-        }
-
-        workspaceService.deleteAllWorkspaces(userDetails);
-    }
-
     @Override
     public String getPath() {
         return PATH;

@@ -113,17 +113,6 @@ public class STDUserController implements STDController {
     }
 
     @SuppressWarnings("javadoc")
-    @DeleteMapping(path = "")
-    @PreAuthorize("hasRole('ADMIN')")
-    public void deleteAllUsers(@AuthenticationPrincipal UserDetails userDetails) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Requested deleting all users");
-        }
-
-        userService.deleteAllUsers(userDetails);
-    }
-
-    @SuppressWarnings("javadoc")
     @PostMapping(path = "/password/forgot", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public void forgotPassword(@Valid @RequestBody STDForgotPasswordRequestBody requestBody) {
         if (LOGGER.isDebugEnabled()) {

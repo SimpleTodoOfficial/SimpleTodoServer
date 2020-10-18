@@ -225,24 +225,6 @@ http://localhost:9090/api/workspaces/WSID
 
 Authorization Bearer TOKEN
 
-### Delete all
-
-### Needed role
-
-- Admin
-
-### Method
-
-DELETE
-
-### URL
-
-http://localhost:9090/api/workspaces
-
-### Headers
-
-Authorization Bearer TOKEN
-
 ## Lists
 
 ### Get all for user
@@ -372,25 +354,6 @@ DELETE
 ### URL
 
 http://localhost:9090/api/workspaces/WSID/lists/LID
-
-### Headers
-
-Authorization Bearer TOKEN
-
-### Delete all in workspace
-
-### Needed role
-
-- Admin
-- User
-
-### Method
-
-DELETE
-
-### URL
-
-http://localhost:9090/api/workspaces/WSID/lists
 
 ### Headers
 
@@ -532,25 +495,6 @@ http://localhost:9090/api/workspaces/WSID/lists/LID/todos/TID
 
 Authorization Bearer TOKEN
 
-### Delete all in list
-
-### Needed role
-
-- Admin
-- User
-
-### Method
-
-DELETE
-
-### URL
-
-http://localhost:9090/api/workspaces/WSID/lists/LID/todos
-
-### Headers
-
-Authorization Bearer TOKEN
-
 ## Users
 
 ### Get all
@@ -630,24 +574,6 @@ DELETE
 ### URL
 
 http://localhost:9090/api/users/UID
-
-### Headers
-
-Authorization Bearer TOKEN
-
-### Delete all
-
-### Needed role
-
-- Admin
-
-### Method
-
-DELETE
-
-### URL
-
-http://localhost:9090/api/users
 
 ### Headers
 

@@ -147,18 +147,6 @@ public class STDTodoController implements STDController {
         todoService.deleteTodo(userDetails, wsId, lId, id);
     }
 
-    @SuppressWarnings("javadoc")
-    @DeleteMapping(path = "/{wsId}/" + STDListController.PATH_LIST + "/{lId}/" + PATH_TODO)
-    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-    public void deleteTodosInList(@NotNull @PathVariable(name = "wsId") String wsId,
-            @NotNull @PathVariable(name = "lId") String lId, @AuthenticationPrincipal UserDetails userDetails) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Requested deleting all todos in list");
-        }
-
-        todoService.deleteAllTodosInList(userDetails, wsId, lId);
-    }
-
     @Override
     public String getPath() {
         return PATH;

@@ -18,6 +18,7 @@ import de.calltopower.simpletodo.api.service.STDService;
 import de.calltopower.simpletodo.impl.db.repository.STDUserForgotPasswordTokensRepository;
 import de.calltopower.simpletodo.impl.db.repository.STDUserRepository;
 import de.calltopower.simpletodo.impl.db.repository.STDUserVerificationTokensRepository;
+import de.calltopower.simpletodo.impl.exception.STDFunctionalException;
 import de.calltopower.simpletodo.impl.exception.STDGeneralException;
 import de.calltopower.simpletodo.impl.exception.STDNotAuthorizedException;
 import de.calltopower.simpletodo.impl.exception.STDNotFoundException;
@@ -144,14 +145,17 @@ public class STDUserService implements STDService {
             if (StringUtils.isNotBlank(requestBody.getJsonData())) {
                 user.setJsonData(requestBody.getJsonData());
             }
-            if (authService.isAdmin(authenticatedUser) && (requestBody.getRoles() != null)) {
+            if ((requestBody.getRoles() != null) && authService.isAdmin(authenticatedUser)) {
                 Set<STDRoleModel> roles = roleService.convertRoles(requestBody.getRoles());
                 STDRoleModel standardUserRole = roleService.getStandardUserRole();
                 if (!roles.contains(standardUserRole)) {
                     roles.add(standardUserRole);
                 }
+                // Make sure one admin exists at any time
+                if (!atLeastOneAdminExists(user)) {
+                    roles.add(roleService.getAdminUserRole());
+                }
                 user.setRoles(roles);
-                // TODO: Make sure one admin exists
             }
         }
 
@@ -176,6 +180,10 @@ public class STDUserService implements STDService {
             try {
                 // Delete all workspaces where this user is the alone user
                 STDUserModel user = getUser(strId);
+                // Make sure one admin exists at any time
+                if (!atLeastOneAdminExists(user)) {
+                    throw new STDFunctionalException("There has to be at least one admin.");
+                }
                 // @formatter:off
                 Set<String> workspaceIDs = user.getWorkspaces().stream()
                                     .filter(w -> w.getUsers().size() == 1)
@@ -186,43 +194,16 @@ public class STDUserService implements STDService {
                 userRepository.deleteById(UUID.fromString(strId));
                 deleteAllUserForgotPasswordTokensForUserId(user.getId());
                 deleteAllUserActivationTokensForUserId(user.getId());
-                // TODO: Make sure one admin exists
             } catch (Exception ex) {
-                String errMsg = String.format("Could not delete user with ID \"%d\"", strId);
+                String errMsg = String.format("Could not delete user with ID \"%s\"", strId);
                 LOGGER.error(errMsg);
                 throw new STDNotFoundException(errMsg);
             }
         } else {
-            String errMsg = String.format("User with ID \"%s\" is not allowed to delete user with ID \"%d\"",
+            String errMsg = String.format("User with ID \"%s\" is not allowed to delete user with ID \"%s\"",
                     authenticatedUser.getId(), strId);
             LOGGER.error(errMsg);
             throw new STDNotAuthorizedException(errMsg);
-        }
-    }
-
-    /**
-     * Deletes all users from DB
-     * 
-     * @param userDetails The user authentication
-     */
-    @Transactional(readOnly = false)
-    public void deleteAllUsers(UserDetails userDetails) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug(String.format("Deleting all workspaces"));
-        }
-
-        @SuppressWarnings("unused")
-        STDUserModel user = authService.authenticate(userDetails);
-
-        try {
-            userRepository.deleteAll();
-            userForgotPasswordTokensRepository.deleteAll();
-            userActivationTokensRepository.deleteAll();
-            // TODO: Make sure one admin exists
-        } catch (Exception ex) {
-            String errMsg = String.format("Could not delete all users");
-            LOGGER.error(errMsg);
-            throw new STDGeneralException(errMsg);
         }
     }
 
@@ -363,6 +344,7 @@ public class STDUserService implements STDService {
         }
     }
 
+    // TODO: Duplicate in STDAuthService::sendEmailVerifyEmailAddress
     private void sendEmailVerifyEmailAddress(STDUserModel user, String newEmail, STDUserVerificationTokenModel model) {
         LOGGER.debug("Sending verify email address email");
         try {
@@ -401,6 +383,7 @@ public class STDUserService implements STDService {
         return tokenOptional.get();
     }
 
+    // TODO: Duplicate in STDAuthService::processUserActivation
     private void processUserActivation(STDUserModel user, String newEmail) {
         LOGGER.debug(String.format("Deleting all old user activation tokens for user with ID \"%s\"", user.getId()));
         deleteAllUserActivationTokensForUserId(user.getId());
@@ -446,6 +429,7 @@ public class STDUserService implements STDService {
         }
     }
 
+    // TODO: Duplicate in STDAuthService::deleteAllUserActivationTokensForUserId
     private void deleteAllUserActivationTokensForUserId(UUID userId) {
         try {
             for (STDUserVerificationTokenModel token : userActivationTokensRepository.findAllByUserId(userId)) {
@@ -457,6 +441,16 @@ public class STDUserService implements STDService {
             LOGGER.error(errMsg);
             throw new STDGeneralException(errMsg);
         }
+    }
+
+    private boolean atLeastOneAdminExists(STDUserModel excludeUserInSearch) {
+        // @formatter:off
+        long nrOfAdmins = userRepository.findAll().stream()
+                                                    .filter(u -> !u.getId().equals(excludeUserInSearch.getId()))
+                                                    .filter(u -> u.getRoles().contains(roleService.getAdminUserRole()))
+                                                    .count();
+        // @formatter:on
+        return nrOfAdmins > 0;
     }
 
 }

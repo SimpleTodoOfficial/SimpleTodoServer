@@ -19,7 +19,6 @@ import de.calltopower.simpletodo.api.service.STDService;
 import de.calltopower.simpletodo.impl.db.repository.STDListRepository;
 import de.calltopower.simpletodo.impl.db.repository.STDUserRepository;
 import de.calltopower.simpletodo.impl.db.repository.STDWorkspaceRepository;
-import de.calltopower.simpletodo.impl.exception.STDGeneralException;
 import de.calltopower.simpletodo.impl.exception.STDNotAuthorizedException;
 import de.calltopower.simpletodo.impl.exception.STDNotFoundException;
 import de.calltopower.simpletodo.impl.model.STDUserModel;
@@ -204,41 +203,18 @@ public class STDWorkspaceService implements STDService {
             try {
                 listRepository.deleteAll(workspace.getLists());
             } catch (Exception ex) {
-                String errMsg = String.format("Could not delete all list in workspace with ID \"%d\"", strId);
+                String errMsg = String.format("Could not delete all list in workspace with ID \"%s\"", strId);
                 LOGGER.error(errMsg);
-                throw new STDNotFoundException(errMsg); // TODO: Ignore error?
+                throw new STDNotFoundException(errMsg);
             }
         }
 
         try {
             workspaceRepository.deleteById(UUID.fromString(strId));
         } catch (Exception ex) {
-            String errMsg = String.format("Could not delete workspace with ID \"%d\"", strId);
+            String errMsg = String.format("Could not delete workspace with ID \"%s\"", strId);
             LOGGER.error(errMsg);
             throw new STDNotFoundException(errMsg);
-        }
-    }
-
-    /**
-     * Deletes all workspaces from DB
-     * 
-     * @param userDetails The user authentication
-     */
-    @Transactional(readOnly = false)
-    public void deleteAllWorkspaces(UserDetails userDetails) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug(String.format("Deleting all workspaces"));
-        }
-
-        @SuppressWarnings("unused")
-        STDUserModel user = authService.authenticate(userDetails);
-
-        try {
-            workspaceRepository.deleteAll();
-        } catch (Exception ex) {
-            String errMsg = String.format("Could not delete all workspaces");
-            LOGGER.error(errMsg);
-            throw new STDGeneralException(errMsg);
         }
     }
 

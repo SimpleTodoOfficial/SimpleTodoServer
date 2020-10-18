@@ -137,18 +137,6 @@ public class STDListController implements STDController {
         listService.deleteList(userDetails, wsId, id);
     }
 
-    @SuppressWarnings("javadoc")
-    @DeleteMapping(path = "/{wsId}/" + PATH_LIST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    @PreAuthorize("hasRole('ADMIN')")
-    public void deleteListsInWorkspace(@NotNull @PathVariable(name = "wsId") String wsId,
-            @AuthenticationPrincipal UserDetails userDetails) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Requested deleting all list in workspace");
-        }
-
-        listService.deleteAllListInWorkspace(userDetails, wsId);
-    }
-
     @Override
     public String getPath() {
         return PATH;

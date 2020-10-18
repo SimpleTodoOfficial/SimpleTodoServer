@@ -270,33 +270,6 @@ public class STDTodoService implements STDService {
         }
     }
 
-    /**
-     * Deletes all todos of a list from DB
-     * 
-     * @param userDetails The user authentication
-     * @param wsId        The workspace ID
-     * @param lId         The list ID
-     */
-    @Transactional(readOnly = false)
-    public void deleteAllTodosInList(UserDetails userDetails, String wsId, String lId) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug(
-                    String.format("Deleting all lists in list with ID \"%s\" in workspace with ID \"%s\"", lId, wsId));
-        }
-
-        STDListModel list = listService.getList(userDetails, wsId, lId);
-
-        try {
-            list.getTodos().clear();
-            listRepository.saveAndFlush(list);
-        } catch (Exception ex) {
-            String errMsg = String.format("Could not delete todos in list with ID \"%s\" workspace with ID \"%s\"", lId,
-                    wsId);
-            LOGGER.error(errMsg);
-            throw new STDNotFoundException(errMsg);
-        }
-    }
-
     private STDTodoModel getTodo(String strId) {
         Optional<STDTodoModel> todoOptional = todoRepository.findById(UUID.fromString(strId));
         if (!todoOptional.isPresent()) {

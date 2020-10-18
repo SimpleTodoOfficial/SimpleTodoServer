@@ -87,8 +87,21 @@ public class STDRoleService implements STDService {
      * @return the standard user role
      */
     public STDRoleModel getStandardUserRole() {
-        return roleRepository.findByName(STDUserRole.ROLE_USER).orElseThrow(
-                () -> new STDNotFoundException(String.format("Role \"%s\" not found.", STDUserRole.ROLE_USER)));
+        return getRole(STDUserRole.ROLE_USER);
+    }
+
+    /**
+     * Returns the admin user role
+     * 
+     * @return the admin user role
+     */
+    public STDRoleModel getAdminUserRole() {
+        return getRole(STDUserRole.ROLE_ADMIN);
+    }
+
+    private STDRoleModel getRole(STDUserRole role) {
+        return roleRepository.findByName(role)
+                .orElseThrow(() -> new STDNotFoundException(String.format("Role \"%s\" not found.", role)));
     }
 
 }
