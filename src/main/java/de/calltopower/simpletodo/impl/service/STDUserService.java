@@ -145,9 +145,8 @@ public class STDUserService implements STDService {
                                                         .flatMap(Collection::stream)
                                                         .collect(Collectors.toSet());
         if (!lists.isEmpty()) {
-            Date dateFrom = new Date(System.currentTimeMillis() - 5 * 3600 * 1000); // - 5 * 60min
-            Date dateTo = new Date(System.currentTimeMillis() + 5 * 3600 * 1000); // + 5 * 60min
-            dueTodos = todoRepository.findAllWithDueDateBetween(dateFrom, dateTo)
+            Date dateTo = new Date(System.currentTimeMillis() + 5 * 3600 * 1000);
+            dueTodos = todoRepository.findAllWithDueDateBefore(dateTo)
                                         .stream()
                                         .filter(t -> lists.contains(t.getList()))
                                         .filter(t -> !t.isStatusDone())

@@ -38,7 +38,7 @@ public interface STDTodoRepository extends JpaRepository<STDTodoModel, UUID> {
     @Override
     Optional<STDTodoModel> findById(UUID id);
 
-    @Query("SELECT t FROM STDTodoModel t WHERE t.dueDate >= :dateFrom AND t.dueDate <= :dateTo")
-    Set<STDTodoModel> findAllWithDueDateBetween(@Param("dateFrom") Date dateFrom, @Param("dateTo") Date dateTo);
+    @Query("SELECT t FROM STDTodoModel t WHERE t.dueDate <= :dateTo")
+    Set<STDTodoModel> findAllWithDueDateBefore(@Param("dateTo") Date dateTo);
 
 }
