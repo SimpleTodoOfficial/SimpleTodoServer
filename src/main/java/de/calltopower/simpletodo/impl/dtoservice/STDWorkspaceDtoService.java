@@ -37,7 +37,7 @@ public class STDWorkspaceDtoService implements STDDtoService<STDWorkspaceDto, ST
         // @formatter:off
         return STDWorkspaceDto.builder()
                 .id(model.getId())
-                .createdDate(model.getCreatedDate())
+                //.createdDate(model.getCreatedDate())
                 .name(model.getName())
                 .users(userDtoService.convertAbridged(model.getUsers()))
                 .lists(listDtoService.convertAbridged(model.getLists()))

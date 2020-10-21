@@ -24,26 +24,13 @@ public class STDTodoDtoService implements STDDtoService<STDTodoDto, STDTodoModel
             return null;
         }
 
-        String dateDue = null;
-        if (model.getDateDue() != null && model.getDateDue().contains(".")) {
-            dateDue = model.getDateDue().split("\\.")[0];
-        } else {
-            dateDue = model.getDateDue();
-        }
-        String dateCreated = null;
-        if (model.getDateCreated() != null && model.getDateCreated().contains(".")) {
-            dateCreated = model.getDateCreated().split("\\.")[0];
-        } else {
-            dateCreated = model.getDateCreated();
-        }
-
         // @formatter:off
         return STDTodoDto.builder()
                 .id(model.getId())
-                .createdDate(dateCreated)
+                //.createdDate(model.getCreatedDate())
                 .msg(model.getMsg())
                 .done(model.isStatusDone())
-                .dueDate(dateDue)
+                .dueDate(model.getDueDate())
                 .workspaceId(model.getList().getWorkspace().getId())
                 .workspaceName(model.getList().getWorkspace().getName())
                 .listId(model.getList().getId())

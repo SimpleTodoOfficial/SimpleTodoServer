@@ -534,6 +534,25 @@ http://localhost:9090/api/users/UID
 
 Authorization Bearer TOKEN
 
+### Get due todos of a user
+
+### Needed role
+
+- Admin
+- User
+
+### Method
+
+GET
+
+### URL
+
+http://localhost:9090/api/users/UID/duetodos
+
+### Headers
+
+Authorization Bearer TOKEN
+
 ### Update
 
 ### Needed role

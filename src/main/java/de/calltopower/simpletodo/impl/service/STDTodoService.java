@@ -1,7 +1,6 @@
 package de.calltopower.simpletodo.impl.service;
 
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
+import java.util.Date;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
@@ -31,9 +30,6 @@ import de.calltopower.simpletodo.impl.requestbody.STDTodoRequestBody;
 public class STDTodoService implements STDService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(STDTodoService.class);
-
-    private static final String DATETIME_FORMAT = "yyyy-MM-dd HH:mm:ss"; // "2020-09-02 06:16:50"
-    private DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(DATETIME_FORMAT);
 
     private STDTodoRepository todoRepository;
     private STDListService listService;
@@ -116,12 +112,13 @@ public class STDTodoService implements STDService {
 
         STDListModel list = listService.getList(userDetails, wsId, lId);
 
+        Date dueDate = null;
         if (StringUtils.isNotBlank(requestBody.getDueDate())) {
             try {
-                dateTimeFormatter.parse(requestBody.getDueDate());
-            } catch (DateTimeParseException ex) {
-                String errMsg = String.format("Could not parse date and time from string \"%s\", format is: \"%s\"",
-                        requestBody.getDueDate(), DATETIME_FORMAT);
+                dueDate = new Date(Long.parseLong(requestBody.getDueDate()));
+            } catch (NumberFormatException ex) {
+                String errMsg = String.format("Could not parse date and time from string \"%s\", timestamp needed",
+                        requestBody.getDueDate());
                 LOGGER.error(errMsg);
                 throw new STDNotFoundException(errMsg);
             }
@@ -134,7 +131,7 @@ public class STDTodoService implements STDService {
         // @formatter:off
         STDTodoModel model = STDTodoModel.builder()
                                             .msg(requestBody.getMsg())
-                                            .dateDue(requestBody.getDueDate())
+                                            .dueDate(dueDate)
                                             .statusDone(requestBody.isDone())
                                             .jsonData(jsonData)
                                             .list(list)
@@ -166,13 +163,13 @@ public class STDTodoService implements STDService {
                     strId, lId, wsId, requestBody));
         }
 
+        Date dueDate = null;
         if (StringUtils.isNotBlank(requestBody.getDueDate())) {
             try {
-                dateTimeFormatter.parse(requestBody.getDueDate());
-            } catch (DateTimeParseException ex) {
-                String errMsg = String.format(
-                        "Could not find parse date and time from string \"%s\", format is: \"%s\"",
-                        requestBody.getDueDate(), DATETIME_FORMAT);
+                dueDate = new Date(Long.parseLong(requestBody.getDueDate()));
+            } catch (NumberFormatException ex) {
+                String errMsg = String.format("Could not parse date and time from string \"%s\", timestamp needed",
+                        requestBody.getDueDate());
                 LOGGER.error(errMsg);
                 throw new STDNotFoundException(errMsg);
             }
@@ -189,7 +186,7 @@ public class STDTodoService implements STDService {
             todo.setJsonData(requestBody.getJsonData());
         }
         todo.setStatusDone(requestBody.isDone());
-        todo.setDateDue(requestBody.getDueDate());
+        todo.setDueDate(dueDate);
 
         return todoRepository.saveAndFlush(todo);
     }

@@ -1,5 +1,6 @@
 package de.calltopower.simpletodo.impl.db.repository;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -8,7 +9,9 @@ import java.util.UUID;
 import javax.persistence.QueryHint;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.jpa.repository.QueryHints;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import de.calltopower.simpletodo.impl.model.STDListModel;
@@ -34,5 +37,8 @@ public interface STDTodoRepository extends JpaRepository<STDTodoModel, UUID> {
     @QueryHints({ @QueryHint(name = "org.hibernate.cacheable", value = "true") })
     @Override
     Optional<STDTodoModel> findById(UUID id);
+
+    @Query("SELECT t FROM STDTodoModel t WHERE t.dueDate >= :dateFrom AND t.dueDate <= :dateTo")
+    Set<STDTodoModel> findAllWithDueDateBetween(@Param("dateFrom") Date dateFrom, @Param("dateTo") Date dateTo);
 
 }

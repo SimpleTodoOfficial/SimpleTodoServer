@@ -1,6 +1,7 @@
 package de.calltopower.simpletodo.impl.model;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.UUID;
 
 import javax.persistence.Column;
@@ -12,6 +13,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.NotBlank;
 
 import org.hibernate.annotations.Cache;
@@ -53,14 +56,16 @@ public class STDTodoModel implements Serializable, STDModel {
     @Column(name = "NR_ID", columnDefinition = "BINARY(16)")
     private UUID id;
 
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "DATE_CREATED")
-    private String dateCreated;
+    private Date createdDate;
 
     @Column(name = "STR_MSG")
     private String msg;
 
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "DATE_DUE")
-    private String dateDue;
+    private Date dueDate;
 
     @Column(name = "STATUS_DONE")
     private boolean statusDone;
@@ -80,14 +85,14 @@ public class STDTodoModel implements Serializable, STDModel {
         return String.format(
                 "STDTodoModel["
                     + "id='%s',"
-                    + "dateCreated='%s',"
+                    + "createdDate='%s',"
                     + "msg='%s',"
                     + "dateDue='%s',"
                 + "]",
                 id,
-                dateCreated,
+                createdDate,
                 msg,
-                dateDue != null ? dateDue : "-"
+                dueDate != null ? dueDate : "-"
                 );
         // @formatter:on
     }

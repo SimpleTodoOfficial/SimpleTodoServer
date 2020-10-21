@@ -1,5 +1,8 @@
 package de.calltopower.simpletodo.impl.service;
 
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
@@ -15,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import de.calltopower.simpletodo.api.service.STDService;
+import de.calltopower.simpletodo.impl.db.repository.STDTodoRepository;
 import de.calltopower.simpletodo.impl.db.repository.STDUserForgotPasswordTokensRepository;
 import de.calltopower.simpletodo.impl.db.repository.STDUserRepository;
 import de.calltopower.simpletodo.impl.db.repository.STDUserVerificationTokensRepository;
@@ -23,7 +27,9 @@ import de.calltopower.simpletodo.impl.exception.STDGeneralException;
 import de.calltopower.simpletodo.impl.exception.STDNotAuthorizedException;
 import de.calltopower.simpletodo.impl.exception.STDNotFoundException;
 import de.calltopower.simpletodo.impl.exception.STDUserException;
+import de.calltopower.simpletodo.impl.model.STDListModel;
 import de.calltopower.simpletodo.impl.model.STDRoleModel;
+import de.calltopower.simpletodo.impl.model.STDTodoModel;
 import de.calltopower.simpletodo.impl.model.STDUserForgotPasswordTokenModel;
 import de.calltopower.simpletodo.impl.model.STDUserModel;
 import de.calltopower.simpletodo.impl.model.STDUserVerificationTokenModel;
@@ -46,23 +52,25 @@ public class STDUserService implements STDService {
     private STDWorkspaceService workspaceService;
     private STDEmailService emailService;
     private PasswordEncoder encoder;
+    private STDTodoRepository todoRepository;
 
     /**
      * Initializes the service
      * 
-     * @param userRepository   The DB repository
+     * @param userRepository   The user DB repository
      * @param roleService      The role service
      * @param authService      The authentication service
      * @param workspaceService The workspace service
      * @param emailService     The email service
      * @param encoder          The encoder
+     * @param todoRepository   The Todo DB repository
      */
     @Autowired
     public STDUserService(STDUserRepository userRepository,
             STDUserForgotPasswordTokensRepository userForgotPasswordTokensRepository,
             STDUserVerificationTokensRepository userActivationTokensRepository, STDRoleService roleService,
             STDAuthService authService, STDWorkspaceService workspaceService, STDEmailService emailService,
-            PasswordEncoder encoder) {
+            PasswordEncoder encoder, STDTodoRepository todoRepository) {
         this.userRepository = userRepository;
         this.userForgotPasswordTokensRepository = userForgotPasswordTokensRepository;
         this.userActivationTokensRepository = userActivationTokensRepository;
@@ -71,6 +79,7 @@ public class STDUserService implements STDService {
         this.workspaceService = workspaceService;
         this.emailService = emailService;
         this.encoder = encoder;
+        this.todoRepository = todoRepository;
     }
 
     /**
@@ -108,6 +117,45 @@ public class STDUserService implements STDService {
         STDUserModel user = authService.authenticate(userDetails);
 
         return getUser(strId);
+    }
+
+    /**
+     * Returns due Todos for a given user
+     * 
+     * @param userDetails The user authentication
+     * @param strId       The user ID
+     * @return a user
+     */
+    @Transactional(readOnly = true)
+    public Set<STDTodoModel> getDueTodosForUser(UserDetails userDetails, String strId) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug(String.format("Getting due Todos for user with ID \"%s\"", strId));
+        }
+
+        @SuppressWarnings("unused")
+        STDUserModel userAuth = authService.authenticate(userDetails);
+
+        STDUserModel userFor = getUser(strId);
+
+        // TODO: I guess this is kind of slow... find another way!
+        Set<STDTodoModel> dueTodos = new HashSet<>();
+        // @formatter:off
+        Set<STDListModel> lists = userFor.getWorkspaces().stream()
+                                                        .map(w -> w.getLists())
+                                                        .flatMap(Collection::stream)
+                                                        .collect(Collectors.toSet());
+        if (!lists.isEmpty()) {
+            Date dateFrom = new Date(System.currentTimeMillis() - 5 * 3600 * 1000); // - 5 * 60min
+            Date dateTo = new Date(System.currentTimeMillis() + 5 * 3600 * 1000); // + 5 * 60min
+            dueTodos = todoRepository.findAllWithDueDateBetween(dateFrom, dateTo)
+                                        .stream()
+                                        .filter(t -> lists.contains(t.getList()))
+                                        .filter(t -> !t.isStatusDone())
+                                        .collect(Collectors.toSet());
+        }
+        // @formatter:on
+
+        return dueTodos;
     }
 
     /**

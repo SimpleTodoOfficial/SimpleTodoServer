@@ -1,5 +1,6 @@
 package de.calltopower.simpletodo.impl.dto;
 
+import java.util.Date;
 import java.util.Set;
 import java.util.UUID;
 
@@ -26,7 +27,7 @@ public class STDListDto implements STDDto<STDListModel> {
 
     @SuppressWarnings("javadoc")
     @JsonProperty
-    public String createdDate;
+    public Date createdDate;
 
     @SuppressWarnings("javadoc")
     @JsonProperty

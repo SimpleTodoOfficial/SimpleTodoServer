@@ -1,5 +1,6 @@
 package de.calltopower.simpletodo.impl.dto;
 
+import java.util.Date;
 import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -25,7 +26,7 @@ public class STDTodoDto implements STDDto<STDTodoModel> {
 
     @SuppressWarnings("javadoc")
     @JsonProperty
-    public String createdDate;
+    public Date createdDate;
 
     @SuppressWarnings("javadoc")
     @JsonProperty
@@ -53,7 +54,7 @@ public class STDTodoDto implements STDDto<STDTodoModel> {
 
     @SuppressWarnings("javadoc")
     @JsonProperty
-    public String dueDate;
+    public Date dueDate;
 
     @SuppressWarnings("javadoc")
     @JsonProperty

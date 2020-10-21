@@ -35,7 +35,7 @@ public class STDListDtoService implements STDDtoService<STDListDto, STDListModel
         // @formatter:off
         return STDListDto.builder()
                 .id(model.getId())
-                .createdDate(model.getCreatedDate())
+                //.createdDate(model.getCreatedDate())
                 .name(model.getName())
                 .workspaceId(model.getWorkspace().getId())
                 .workspaceName(model.getWorkspace().getName())

@@ -1,6 +1,7 @@
 package de.calltopower.simpletodo.impl.model;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -17,6 +18,8 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
@@ -71,9 +74,9 @@ public class STDWorkspaceModel implements Serializable, STDModel {
     @Column(name = "NR_ID", columnDefinition = "BINARY(16)")
     private UUID id;
 
-    @SuppressWarnings("javadoc")
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "DATE_CREATED")
-    public String createdDate;
+    private Date createdDate;
 
     @NotBlank
     @Size(max = 100)

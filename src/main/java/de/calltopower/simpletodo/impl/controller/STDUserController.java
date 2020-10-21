@@ -22,7 +22,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import de.calltopower.simpletodo.api.controller.STDController;
+import de.calltopower.simpletodo.impl.dto.STDTodoDto;
 import de.calltopower.simpletodo.impl.dto.STDUserDto;
+import de.calltopower.simpletodo.impl.dtoservice.STDTodoDtoService;
 import de.calltopower.simpletodo.impl.dtoservice.STDUserDtoService;
 import de.calltopower.simpletodo.impl.requestbody.STDForgotPasswordRequestBody;
 import de.calltopower.simpletodo.impl.requestbody.STDUserRequestBody;
@@ -46,6 +48,7 @@ public class STDUserController implements STDController {
     private STDUserDtoService userDtoService;
     private STDUserService userService;
     private STDAuthService authService;
+    private STDTodoDtoService todoDtoService;
 
     /**
      * Initializes the controller
@@ -53,12 +56,15 @@ public class STDUserController implements STDController {
      * @param userDtoService Injected DTO service
      * @param userService    Injected user service
      * @param authService    Injected authentication service
+     * @param todoDtoService Injected todo DTO service
      */
     @Autowired
-    public STDUserController(STDUserDtoService userDtoService, STDUserService userService, STDAuthService authService) {
+    public STDUserController(STDUserDtoService userDtoService, STDUserService userService, STDAuthService authService,
+            STDTodoDtoService todoDtoService) {
         this.userDtoService = userDtoService;
         this.userService = userService;
         this.authService = authService;
+        this.todoDtoService = todoDtoService;
     }
 
     @SuppressWarnings("javadoc")
@@ -86,6 +92,18 @@ public class STDUserController implements STDController {
         } else {
             return userDtoService.convertAbridged(userService.getUser(userDetails, id));
         }
+    }
+
+    @SuppressWarnings("javadoc")
+    @GetMapping(path = "/{id}/duetodos", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    public Set<STDTodoDto> getDueTodos(@NotNull @PathVariable(name = "id") String id,
+            @AuthenticationPrincipal UserDetails userDetails) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Requested due todos");
+        }
+
+        return todoDtoService.convert(userService.getDueTodosForUser(userDetails, id));
     }
 
     @SuppressWarnings("javadoc")
