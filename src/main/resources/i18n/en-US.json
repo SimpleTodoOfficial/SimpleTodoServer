@@ -40,6 +40,7 @@
     "duetodos.list.component.date_format": "M/d/yy, hh:mm:ss a",
     "duetodos.notification.newduetodos.header": "Due Todos",
     "duetodos.notification.newduetodos.body": "There are due todos. Click here to get to the overview.",
+    "duetodos.notification.newduetodos.shortbody": "There are due Todos. Navigate to \"Due Todos\" via the menu to get an overview.",
     "entertoken.component.enter_token": "Enter Token",
     "entertoken.component.token": "Token",
     "entertoken.component.placeholder.enter_token": "Enter token",

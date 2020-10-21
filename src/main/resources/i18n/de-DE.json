@@ -40,6 +40,7 @@
     "duetodos.list.component.date_format": "d.M.yy, HH:mm:ss",
     "duetodos.notification.newduetodos.header": "Fällige Todos",
     "duetodos.notification.newduetodos.body": "Es sind fällige Todos vorhanden. Klicke hier, um zur Übersicht zu gelangen.",
+    "duetodos.notification.newduetodos.shortbody": "Es sind fällige Todos vorhanden. Klicke im Menü auf \"Fällige Todos\", um zur Übersicht zu gelangen.",
     "entertoken.component.enter_token": "Token eingeben",
     "entertoken.component.token": "Token",
     "entertoken.component.placeholder.enter_token": "Token eingeben",
