@@ -13,6 +13,7 @@
     "app.component.info.sign_out": "Signed out successfully",
     "app.component.error.language_load": "Language information could not be loaded.",
     "app.component.setup.desktopnotifications": "Click here to set up desktop notifications.",
+    "app.component.duetodos": "Due Todos",
     "app.error.not_accessible": "The request resource is not accessible.",
     "app.error.something_went_wrong": "Something went wrong.",
     "app.roles.ADMIN": "Administrator",
