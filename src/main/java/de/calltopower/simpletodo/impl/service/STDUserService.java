@@ -33,8 +33,10 @@ import de.calltopower.simpletodo.impl.model.STDTodoModel;
 import de.calltopower.simpletodo.impl.model.STDUserForgotPasswordTokenModel;
 import de.calltopower.simpletodo.impl.model.STDUserModel;
 import de.calltopower.simpletodo.impl.model.STDUserVerificationTokenModel;
+import de.calltopower.simpletodo.impl.properties.STDSettingsProperties;
 import de.calltopower.simpletodo.impl.requestbody.STDForgotPasswordRequestBody;
 import de.calltopower.simpletodo.impl.requestbody.STDUserRequestBody;
+import de.calltopower.simpletodo.impl.utils.STDDateUtils;
 
 /**
  * Service for user results
@@ -53,6 +55,8 @@ public class STDUserService implements STDService {
     private STDEmailService emailService;
     private PasswordEncoder encoder;
     private STDTodoRepository todoRepository;
+    private STDDateUtils dateUtils;
+    private STDSettingsProperties settingsProperties;
 
     /**
      * Initializes the service
@@ -70,7 +74,8 @@ public class STDUserService implements STDService {
             STDUserForgotPasswordTokensRepository userForgotPasswordTokensRepository,
             STDUserVerificationTokensRepository userActivationTokensRepository, STDRoleService roleService,
             STDAuthService authService, STDWorkspaceService workspaceService, STDEmailService emailService,
-            PasswordEncoder encoder, STDTodoRepository todoRepository) {
+            PasswordEncoder encoder, STDTodoRepository todoRepository, STDDateUtils dateUtils,
+            STDSettingsProperties settingsProperties) {
         this.userRepository = userRepository;
         this.userForgotPasswordTokensRepository = userForgotPasswordTokensRepository;
         this.userActivationTokensRepository = userActivationTokensRepository;
@@ -80,6 +85,8 @@ public class STDUserService implements STDService {
         this.emailService = emailService;
         this.encoder = encoder;
         this.todoRepository = todoRepository;
+        this.dateUtils = dateUtils;
+        this.settingsProperties = settingsProperties;
     }
 
     /**
@@ -137,22 +144,27 @@ public class STDUserService implements STDService {
 
         STDUserModel userFor = getUser(strId);
 
-        // TODO: I guess this is kind of slow... find another way!
         Set<STDTodoModel> dueTodos = new HashSet<>();
         // @formatter:off
         Set<STDListModel> lists = userFor.getWorkspaces().stream()
                                                         .map(w -> w.getLists())
                                                         .flatMap(Collection::stream)
                                                         .collect(Collectors.toSet());
+        // @formatter:on
         if (!lists.isEmpty()) {
-            Date dateTo = new Date(System.currentTimeMillis() + 5 * 3600 * 1000);
+            if (LOGGER.isDebugEnabled()) {
+                LOGGER.debug(String.format("Retrieving all due todos from the past until now + %d minutes",
+                        settingsProperties.getDueTodosMinutesPlus()));
+            }
+            Date dateTo = dateUtils.getDatePlusMinutes(settingsProperties.getDueTodosMinutesPlus());
+            // @formatter:off 
             dueTodos = todoRepository.findAllWithDueDateBefore(dateTo)
                                         .stream()
                                         .filter(t -> lists.contains(t.getList()))
                                         .filter(t -> !t.isStatusDone())
                                         .collect(Collectors.toSet());
+            // @formatter:on
         }
-        // @formatter:on
 
         return dueTodos;
     }

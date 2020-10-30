@@ -20,6 +20,8 @@ public class STDSettingsProperties implements STDProperties {
      */
     public static final String PREFIX = "simpletodo";
 
+    public static final long DUE_TODOS_MINUTES_PLUS_DEFAULT = 300;
+
     @Value("${" + PREFIX + ".signup}")
     private String signup;
 
@@ -38,6 +40,9 @@ public class STDSettingsProperties implements STDProperties {
     @Value("${" + PREFIX + ".mail-from}")
     private String mailFrom;
 
+    @Value("${" + PREFIX + ".duetodos-minutes-plus}")
+    private Long dueTodosMinutesPlus;
+
     @Override
     public String getPrefix() {
         return PREFIX;
@@ -45,6 +50,10 @@ public class STDSettingsProperties implements STDProperties {
 
     public boolean signupAllowed() {
         return !signup.equals("DISABLED");
+    }
+
+    public long getDueTodosMinutesPlus() {
+        return dueTodosMinutesPlus == null ? DUE_TODOS_MINUTES_PLUS_DEFAULT : dueTodosMinutesPlus;
     }
 
 }
