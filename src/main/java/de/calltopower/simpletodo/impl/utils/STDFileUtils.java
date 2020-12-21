@@ -1,6 +1,7 @@
 package de.calltopower.simpletodo.impl.utils;
 
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import de.calltopower.simpletodo.api.utils.STDUtils;
+import de.calltopower.simpletodo.impl.cache.STDFileContentCache;
 import de.calltopower.simpletodo.impl.service.STDI18nService;
 
 /**
@@ -22,12 +24,14 @@ public class STDFileUtils implements STDUtils {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(STDFileUtils.class);
 
+    private STDFileContentCache fileContentCache;
+
     /**
      * Constructor
      */
     @Autowired
-    STDFileUtils() {
-        // Nothing to see here...
+    public STDFileUtils(STDFileContentCache fileContentCache) {
+        this.fileContentCache = fileContentCache;
     }
 
     /**
@@ -38,6 +42,14 @@ public class STDFileUtils implements STDUtils {
      * @throws IOException If not found or another error occurred
      */
     public String getResourceFileAsString(String fileName) throws IOException {
+        if (fileContentCache.containsKey(fileName)) {
+            if (LOGGER.isDebugEnabled()) {
+                LOGGER.debug(String.format("Loading file from cache: \"%s\"", fileName));
+            }
+
+            return fileContentCache.get(fileName);
+        }
+
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug(String.format("Loading file from resources: \"%s\"", fileName));
         }
@@ -45,16 +57,16 @@ public class STDFileUtils implements STDUtils {
         InputStream is = getResourceFileAsInputStream(fileName);
         if (is != null) {
             try (BufferedReader reader = new BufferedReader(new InputStreamReader(is))) {
-                return (String) reader.lines().collect(Collectors.joining(System.lineSeparator()));
+                String fileContent = reader.lines().collect(Collectors.joining(System.lineSeparator()));
+                return fileContentCache.cache(fileName, fileContent);
             }
         } else {
-            throw new IOException("File not found");
+            throw new FileNotFoundException("File not found");
         }
     }
 
     private InputStream getResourceFileAsInputStream(String fileName) {
-        ClassLoader classLoader = STDI18nService.class.getClassLoader();
-        return classLoader.getResourceAsStream(fileName);
+        return STDI18nService.class.getClassLoader().getResourceAsStream(fileName);
     }
 
 }

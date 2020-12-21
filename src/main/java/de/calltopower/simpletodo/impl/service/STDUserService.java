@@ -203,6 +203,8 @@ public class STDUserService implements STDService {
             }
             if (StringUtils.isNotBlank(requestBody.getJsonData())) {
                 user.setJsonData(requestBody.getJsonData());
+            } else {
+                user.setJsonData("{}");
             }
             if ((requestBody.getRoles() != null) && authService.isAdmin(authenticatedUser)) {
                 Set<STDRoleModel> roles = roleService.convertRoles(requestBody.getRoles());
@@ -216,6 +218,8 @@ public class STDUserService implements STDService {
                 }
                 user.setRoles(roles);
             }
+        } else {
+            throw new STDNotAuthorizedException("You are not allowed to update this user.");
         }
 
         return userRepository.saveAndFlush(user);
@@ -273,7 +277,7 @@ public class STDUserService implements STDService {
         }
 
         if (requestBody.getUsername() == null || requestBody.getEmail() == null) {
-            String errMsg = String.format("Username and email must be provided");
+            String errMsg = "Username and email must be provided";
             LOGGER.error(errMsg);
             throw new STDUserException(errMsg);
         }
@@ -293,15 +297,19 @@ public class STDUserService implements STDService {
             throw new STDUserException(errMsg);
         }
 
-        LOGGER.debug(
-                String.format("Deleting all old forgot password tokens for user with ID \"%s\"", foundUser.getId()));
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug(String.format("Deleting all old forgot password tokens for user with ID \"%s\"",
+                    foundUser.getId()));
+        }
         deleteAllUserForgotPasswordTokensForUserId(foundUser.getId());
 
         STDUserForgotPasswordTokenModel model = STDUserForgotPasswordTokenModel.builder().userId(foundUser.getId())
                 .build();
         model = userForgotPasswordTokensRepository.saveAndFlush(model);
 
-        LOGGER.debug(String.format("Saved forgot password token with id \"%s\"", model.getId()));
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug(String.format("Saved forgot password token with id \"%s\"", model.getId()));
+        }
 
         sendEmailForgotPassword(foundUser, model);
     }
@@ -324,7 +332,10 @@ public class STDUserService implements STDService {
 
         userRepository.saveAndFlush(user);
 
-        LOGGER.debug(String.format("Deleting all old forgot password tokens for user with ID \"%s\"", user.getId()));
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug(
+                    String.format("Deleting all old forgot password tokens for user with ID \"%s\"", user.getId()));
+        }
         deleteAllUserForgotPasswordTokensForUserId(user.getId());
 
         sendEmailNewPasswordGenerated(user, newPassword);
@@ -338,10 +349,9 @@ public class STDUserService implements STDService {
     @Transactional(readOnly = false)
     public void resendVerification(UserDetails userDetails) {
         if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug(String.format("Resending verification"));
+            LOGGER.debug("Resending verification");
         }
 
-        @SuppressWarnings("unused")
         STDUserModel user = authService.authenticate(userDetails);
 
         processUserActivation(user, user.getEmail());
@@ -364,7 +374,10 @@ public class STDUserService implements STDService {
 
         userRepository.saveAndFlush(user);
 
-        LOGGER.debug(String.format("Deleting all old user activation tokens for user with ID \"%s\"", user.getId()));
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug(
+                    String.format("Deleting all old user activation tokens for user with ID \"%s\"", user.getId()));
+        }
         deleteAllUserActivationTokensForUserId(user.getId());
 
         sendEmailEmailAddressVerified(user);
@@ -450,7 +463,9 @@ public class STDUserService implements STDService {
         STDUserVerificationTokenModel model = STDUserVerificationTokenModel.builder().userId(user.getId()).build();
         model = userActivationTokensRepository.saveAndFlush(model);
 
-        LOGGER.debug(String.format("Saved user activation token with id \"%s\"", model.getId()));
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug(String.format("Saved user activation token with id \"%s\"", model.getId()));
+        }
 
         sendEmailVerifyEmailAddress(user, newEmail, model);
     }

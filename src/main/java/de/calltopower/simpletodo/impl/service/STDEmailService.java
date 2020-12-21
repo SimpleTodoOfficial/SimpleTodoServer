@@ -24,6 +24,13 @@ public class STDEmailService implements STDService {
     private JavaMailSender javaMailSender;
     private STDEmailTemplateService emailTemplateService;
 
+    /**
+     * Initializes the service
+     * 
+     * @param settingsProperties   Settings properties
+     * @param javaMailSender       Java Mail Sender
+     * @param emailTemplateService Email template service
+     */
     @Autowired
     public STDEmailService(STDSettingsProperties settingsProperties, JavaMailSender javaMailSender,
             STDEmailTemplateService emailTemplateService) {
@@ -66,7 +73,8 @@ public class STDEmailService implements STDService {
             MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage);
             messageHelper.setFrom(settingsProperties.getMailFrom());
             messageHelper.setTo(toEmail);
-            messageHelper.setSubject("SimpleTodo: Passwort-Zurücksetzen-Token generiert / Password Reset Token generated");
+            messageHelper
+                    .setSubject("SimpleTodo: Passwort-Zurücksetzen-Token generiert / Password Reset Token generated");
             String content = emailTemplateService.buildForgotPassword(model.getId().toString());
             messageHelper.setText(content, true);
         };

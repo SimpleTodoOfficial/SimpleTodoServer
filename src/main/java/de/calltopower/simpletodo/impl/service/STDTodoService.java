@@ -222,8 +222,6 @@ public class STDTodoService implements STDService {
         currentList.getTodos().remove(todo);
         newList.getTodos().add(todo);
 
-        // listRepository.saveAndFlush(currentList);
-        // listRepository.saveAndFlush(newList);
         todo.setList(newList);
         return todoRepository.saveAndFlush(todo);
     }

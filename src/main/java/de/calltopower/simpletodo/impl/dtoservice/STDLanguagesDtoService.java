@@ -33,15 +33,7 @@ public class STDLanguagesDtoService implements STDDtoService<STDLanguagesDto, ST
 
     @Override
     public STDLanguagesDto convertAbridged(STDLanguagesModel model) {
-        if (model == null) {
-            return null;
-        }
-
-        // @formatter:off
-        return STDLanguagesDto.builder()
-                .languages(model.getLanguages())
-                .build();
-        // @formatter:on
+        return convert(model);
     }
 
     @Override

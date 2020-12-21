@@ -48,10 +48,20 @@ public class STDSettingsProperties implements STDProperties {
         return PREFIX;
     }
 
+    /**
+     * Returns whether signing up for new users is allowed
+     * 
+     * @return boolean flag whether signing up for new users is allowed
+     */
     public boolean signupAllowed() {
         return !signup.equals("DISABLED");
     }
 
+    /**
+     * Returns the due Todos minutes plus value
+     * 
+     * @return due Todos minutes plus
+     */
     public long getDueTodosMinutesPlus() {
         return dueTodosMinutesPlus == null ? DUE_TODOS_MINUTES_PLUS_DEFAULT : dueTodosMinutesPlus;
     }

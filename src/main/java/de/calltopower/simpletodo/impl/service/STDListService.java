@@ -191,8 +191,6 @@ public class STDListService implements STDService {
         currentWorkspace.getLists().remove(list);
         newWorkspace.getLists().add(list);
 
-        // workspaceRepository.saveAndFlush(currentWorkspace);
-        // workspaceRepository.saveAndFlush(newWorkspace);
         list.setWorkspace(newWorkspace);
         return listRepository.saveAndFlush(list);
     }

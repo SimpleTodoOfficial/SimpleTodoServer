@@ -27,11 +27,7 @@ public class STDTranslationsModel implements Serializable, STDModel {
 
     @Override
     public String toString() {
-        // @formatter:off
-        return String.format(
-                "STDTranslationsModel"
-               );
-        // @formatter:on
+        return "STDTranslationsModel";
     }
 
 }

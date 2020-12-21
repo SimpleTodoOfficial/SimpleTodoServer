@@ -38,6 +38,11 @@ public class STDI18nService implements STDService {
         this.fileUtils = fileUtils;
     }
 
+    /**
+     * Returns all languages
+     * 
+     * @return all languages
+     */
     public STDLanguagesModel getLanguages() {
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("Returning all languages");
@@ -49,6 +54,12 @@ public class STDI18nService implements STDService {
                 .build();
     }
 
+    /**
+     * Returns a specific language file
+     * 
+     * @param id Language ID
+     * @return a specific language file
+     */
     public STDTranslationsModel getLanguageFile(String id) {
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("Returning all languages");

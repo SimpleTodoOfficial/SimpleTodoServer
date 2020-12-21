@@ -63,8 +63,8 @@ public class STDRoleService implements STDService {
                     
                     return userRoleOpt;
                 })
-                .filter(opt -> opt.isPresent())
-                .map(opt -> opt.get())
+                .filter(Optional::isPresent)
+                .map(Optional::get)
                 .map(role -> {
                     Optional<STDRoleModel> mappedRole = allRoles.stream()
                     .filter(r -> r.getName().getInternalName().equalsIgnoreCase(role.getInternalName()))
@@ -75,8 +75,8 @@ public class STDRoleService implements STDService {
                     
                     return mappedRole;
                 })
-                .filter(opt -> opt.isPresent())
-                .map(opt -> opt.get())
+                .filter(Optional::isPresent)
+                .map(Optional::get)
                 .collect(Collectors.toSet());
         // @formatter:on
     }

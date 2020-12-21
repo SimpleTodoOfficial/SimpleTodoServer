@@ -197,7 +197,6 @@ public class STDWorkspaceService implements STDService {
             LOGGER.debug(String.format("Deleting workspace with ID \"%s\"", strId));
         }
 
-        @SuppressWarnings("unused")
         STDWorkspaceModel workspace = getWorkspace(userDetails, strId);
         if (!workspace.getLists().isEmpty()) {
             try {

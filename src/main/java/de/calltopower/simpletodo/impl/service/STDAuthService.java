@@ -55,11 +55,14 @@ public class STDAuthService implements STDService {
     /**
      * Initializes the service
      * 
-     * @param authenticationManager The authentication manager
-     * @param encoder               The encoder
-     * @param jwtUtils              The JWT utilities
-     * @param userRepository        The user repository
-     * @param roleService           The role service
+     * @param authenticationManager          The authentication manager
+     * @param encoder                        The encoder
+     * @param jwtUtils                       The JWT utilities
+     * @param userRepository                 The user repository
+     * @param roleService                    The role service
+     * @param functionalProperties           Functional properties
+     * @param emailService                   Email service
+     * @param userActivationTokensRepository user activation tokens repository
      */
     @Autowired
     public STDAuthService(AuthenticationManager authenticationManager, PasswordEncoder encoder, STDTokenUtils jwtUtils,
@@ -93,12 +96,14 @@ public class STDAuthService implements STDService {
             throw new STDFunctionalException("New users are not allowed to register themselves.");
         }
 
-        if (userRepository.existsByUsername(requestBody.getUsername())) {
+        Boolean existsByUsername = userRepository.existsByUsername(requestBody.getUsername());
+        if (existsByUsername != null && existsByUsername.booleanValue()) {
             LOGGER.error("Username is already taken");
             throw new STDUserException("Username is already taken");
         }
 
-        if (userRepository.existsByEmail(requestBody.getEmail())) {
+        Boolean existsByEmail = userRepository.existsByEmail(requestBody.getEmail());
+        if (existsByEmail != null && existsByEmail.booleanValue()) {
             LOGGER.error("Email is already in use");
             throw new STDUserException("Email is already in use");
         }
@@ -112,7 +117,7 @@ public class STDAuthService implements STDService {
                                             .username(requestBody.getUsername())
                                             .email(requestBody.getEmail())
                                             .password(encoder.encode(requestBody.getPassword()))
-                                            .jsonData(requestBody.getJsonData())
+                                            .jsonData(jsonData)
                                         .build();
         // @formatter:on
 
@@ -185,9 +190,7 @@ public class STDAuthService implements STDService {
         // @formatter:off
         return user.getRoles().stream()
                                 .map(r -> r.getName())
-                                .filter(r -> r.equals(STDUserRole.ROLE_ADMIN))
-                                .findFirst()
-                                .isPresent();
+                                .anyMatch(r -> r.equals(STDUserRole.ROLE_ADMIN));
         // @formatter:on
     }
 
@@ -200,6 +203,7 @@ public class STDAuthService implements STDService {
      * @return true if the userDetails user is the requested authenticated user with
      *         ID strId, false else
      */
+    @Transactional(readOnly = true)
     public boolean isAdminOrRequestedUser(STDUserModel user, String strId) {
         return user != null && (isAdmin(user) || user.getId().equals(UUID.fromString(strId)));
     }

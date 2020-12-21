@@ -33,15 +33,7 @@ public class STDTranslationsDtoService implements STDDtoService<STDTranslationsD
 
     @Override
     public STDTranslationsDto convertAbridged(STDTranslationsModel model) {
-        if (model == null) {
-            return null;
-        }
-
-        // @formatter:off
-        return STDTranslationsDto.builder()
-                .translations(model.getTranslations())
-                .build();
-        // @formatter:on
+        return convert(model);
     }
 
     @Override
