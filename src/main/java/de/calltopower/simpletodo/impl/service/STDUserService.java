@@ -37,6 +37,7 @@ import de.calltopower.simpletodo.impl.properties.STDSettingsProperties;
 import de.calltopower.simpletodo.impl.requestbody.STDForgotPasswordRequestBody;
 import de.calltopower.simpletodo.impl.requestbody.STDUserRequestBody;
 import de.calltopower.simpletodo.impl.utils.STDDateUtils;
+import de.calltopower.simpletodo.impl.utils.STDJsonUtils;
 
 /**
  * Service for user results
@@ -56,25 +57,37 @@ public class STDUserService implements STDService {
     private PasswordEncoder encoder;
     private STDTodoRepository todoRepository;
     private STDDateUtils dateUtils;
+    private STDJsonUtils jsonUtils;
     private STDSettingsProperties settingsProperties;
 
     /**
      * Initializes the service
      * 
-     * @param userRepository   The user DB repository
-     * @param roleService      The role service
-     * @param authService      The authentication service
-     * @param workspaceService The workspace service
-     * @param emailService     The email service
-     * @param encoder          The encoder
-     * @param todoRepository   The Todo DB repository
+     */
+    /**
+     * Initializes the service
+     * 
+     * @param userRepository                     The user DB repository
+     * @param userForgotPasswordTokensRepository The user forgot password tokens
+     *                                           repository
+     * @param userActivationTokensRepository     The user activation tokens
+     *                                           repository
+     * @param roleService                        The role service
+     * @param authService                        The authentication service
+     * @param workspaceService                   The workspace service
+     * @param emailService                       The email service
+     * @param encoder                            The encoder
+     * @param todoRepository                     The Todo DB repository
+     * @param dateUtils                          The date utils
+     * @param jsonUtils                          The Json utils
+     * @param settingsProperties                 Settings Properties
      */
     @Autowired
     public STDUserService(STDUserRepository userRepository,
             STDUserForgotPasswordTokensRepository userForgotPasswordTokensRepository,
             STDUserVerificationTokensRepository userActivationTokensRepository, STDRoleService roleService,
             STDAuthService authService, STDWorkspaceService workspaceService, STDEmailService emailService,
-            PasswordEncoder encoder, STDTodoRepository todoRepository, STDDateUtils dateUtils,
+            PasswordEncoder encoder, STDTodoRepository todoRepository, STDDateUtils dateUtils, STDJsonUtils jsonUtils,
             STDSettingsProperties settingsProperties) {
         this.userRepository = userRepository;
         this.userForgotPasswordTokensRepository = userForgotPasswordTokensRepository;
@@ -86,6 +99,7 @@ public class STDUserService implements STDService {
         this.encoder = encoder;
         this.todoRepository = todoRepository;
         this.dateUtils = dateUtils;
+        this.jsonUtils = jsonUtils;
         this.settingsProperties = settingsProperties;
     }
 
@@ -201,11 +215,7 @@ public class STDUserService implements STDService {
             if (StringUtils.isNotBlank(requestBody.getPassword())) {
                 user.setPassword(encoder.encode(requestBody.getPassword()));
             }
-            if (StringUtils.isNotBlank(requestBody.getJsonData())) {
-                user.setJsonData(requestBody.getJsonData());
-            } else {
-                user.setJsonData("{}");
-            }
+            user.setJsonData(jsonUtils.getNonEmptyJson(requestBody.getJsonData()));
             if ((requestBody.getRoles() != null) && authService.isAdmin(authenticatedUser)) {
                 Set<STDRoleModel> roles = roleService.convertRoles(requestBody.getRoles());
                 STDRoleModel standardUserRole = roleService.getStandardUserRole();
@@ -325,10 +335,9 @@ public class STDUserService implements STDService {
         STDUserModel user = getUser(token.getUserId());
         String newPassword = String.format("std_pw_%s", UUID.randomUUID().toString());
         user.setPassword(encoder.encode(newPassword));
+
         // JSON validation workaround
-        if (StringUtils.isBlank(user.getJsonData())) {
-            user.setJsonData("{}");
-        }
+        user.setJsonData(jsonUtils.getNonEmptyJson(user.getJsonData()));
 
         userRepository.saveAndFlush(user);
 
@@ -367,10 +376,9 @@ public class STDUserService implements STDService {
 
         STDUserModel user = getUser(token.getUserId());
         user.setStatusVerified(true);
+
         // JSON validation workaround
-        if (StringUtils.isBlank(user.getJsonData())) {
-            user.setJsonData("{}");
-        }
+        user.setJsonData(jsonUtils.getNonEmptyJson(user.getJsonData()));
 
         userRepository.saveAndFlush(user);
 

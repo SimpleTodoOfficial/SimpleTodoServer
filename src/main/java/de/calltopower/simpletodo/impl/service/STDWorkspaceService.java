@@ -24,6 +24,7 @@ import de.calltopower.simpletodo.impl.exception.STDNotFoundException;
 import de.calltopower.simpletodo.impl.model.STDUserModel;
 import de.calltopower.simpletodo.impl.model.STDWorkspaceModel;
 import de.calltopower.simpletodo.impl.requestbody.STDWorkspaceRequestBody;
+import de.calltopower.simpletodo.impl.utils.STDJsonUtils;
 
 /**
  * Service for workspace results
@@ -37,6 +38,7 @@ public class STDWorkspaceService implements STDService {
     private STDAuthService authService;
     private STDUserRepository userRepository;
     private STDListRepository listRepository;
+    private STDJsonUtils jsonUtils;
 
     /**
      * Initializes the service
@@ -45,14 +47,16 @@ public class STDWorkspaceService implements STDService {
      * @param userService         The user service
      * @param userRepository      The user DB repository
      * @param listRepository      The list DB repository
+     * @param jsonUtils           The Json utilities
      */
     @Autowired
     public STDWorkspaceService(STDWorkspaceRepository workspaceRepository, STDAuthService authService,
-            STDUserRepository userRepository, STDListRepository listRepository) {
+            STDUserRepository userRepository, STDListRepository listRepository, STDJsonUtils jsonUtils) {
         this.workspaceRepository = workspaceRepository;
         this.authService = authService;
         this.userRepository = userRepository;
         this.listRepository = listRepository;
+        this.jsonUtils = jsonUtils;
     }
 
     /**
@@ -121,10 +125,7 @@ public class STDWorkspaceService implements STDService {
         users.add(user);
 
         // @formatter:off
-        String jsonData = requestBody.getJsonData();
-        if (StringUtils.isBlank(jsonData)) {
-            jsonData = "{}";
-        }
+        String jsonData = jsonUtils.getNonEmptyJson(requestBody.getJsonData());
         STDWorkspaceModel model = STDWorkspaceModel.builder()
                                                     .name(requestBody.getName())
                                                     .users(users)

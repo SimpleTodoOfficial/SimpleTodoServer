@@ -22,6 +22,7 @@ import de.calltopower.simpletodo.impl.model.STDListModel;
 import de.calltopower.simpletodo.impl.model.STDTodoModel;
 import de.calltopower.simpletodo.impl.requestbody.STDTodoMovementRequestBody;
 import de.calltopower.simpletodo.impl.requestbody.STDTodoRequestBody;
+import de.calltopower.simpletodo.impl.utils.STDJsonUtils;
 
 /**
  * Service for todo results
@@ -34,21 +35,23 @@ public class STDTodoService implements STDService {
     private STDTodoRepository todoRepository;
     private STDListService listService;
     private STDListRepository listRepository;
+    private STDJsonUtils jsonUtils;
 
     /**
      * Initializes the service
      * 
-     * @param todoRepository   The DB repository
-     * @param listService      The list service
-     * @param listRepository   The list db Repository
-     * @param workspaceService The workspace service
+     * @param todoRepository The DB repository
+     * @param listService    The list service
+     * @param listRepository The list db Repository
+     * @param jsonUtils      The Json utilities
      */
     @Autowired
     public STDTodoService(STDTodoRepository todoRepository, STDListService listService,
-            STDListRepository listRepository) {
+            STDListRepository listRepository, STDJsonUtils jsonUtils) {
         this.todoRepository = todoRepository;
         this.listService = listService;
         this.listRepository = listRepository;
+        this.jsonUtils = jsonUtils;
     }
 
     /**
@@ -123,10 +126,7 @@ public class STDTodoService implements STDService {
                 throw new STDNotFoundException(errMsg);
             }
         }
-        String jsonData = requestBody.getJsonData();
-        if (StringUtils.isBlank(jsonData)) {
-            jsonData = "{}";
-        }
+        String jsonData = jsonUtils.getNonEmptyJson(requestBody.getJsonData());
 
         // @formatter:off
         STDTodoModel model = STDTodoModel.builder()

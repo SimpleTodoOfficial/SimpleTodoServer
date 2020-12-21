@@ -198,7 +198,7 @@
     "users.addedit.component.success.user_add": "User successfully added.",
     "users.addedit.component.error.user_add": "User could not be added.",
     "users.addedit.component.success.user_update": "User successfully updated.",
-    "users.addedit.component.error.user_update": "User could not be updated.",
+    "users.addedit.component.error.user_update": "User could not be updated. Maybe the email address is already in use?",
     "users.details.component.username": "Username",
     "users.details.component.email": "Email address",
     "users.details.component.verification": "Status",

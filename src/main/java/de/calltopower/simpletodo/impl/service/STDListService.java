@@ -22,6 +22,7 @@ import de.calltopower.simpletodo.impl.model.STDUserModel;
 import de.calltopower.simpletodo.impl.model.STDWorkspaceModel;
 import de.calltopower.simpletodo.impl.requestbody.STDListMovementRequestBody;
 import de.calltopower.simpletodo.impl.requestbody.STDListRequestBody;
+import de.calltopower.simpletodo.impl.utils.STDJsonUtils;
 
 /**
  * Service for list results
@@ -35,6 +36,7 @@ public class STDListService implements STDService {
     private STDWorkspaceRepository workspaceRepository;
     private STDWorkspaceService workspaceService;
     private STDAuthService authService;
+    private STDJsonUtils jsonUtils;
 
     /**
      * Initializes the service
@@ -43,14 +45,16 @@ public class STDListService implements STDService {
      * @param workspaceRepository The workspace DB repository
      * @param workspaceService    The workspace service
      * @param authService         The auth service
+     * @param jsonUtils           The Json utilities
      */
     @Autowired
     public STDListService(STDListRepository listRepository, STDWorkspaceRepository workspaceRepository,
-            STDWorkspaceService workspaceService, STDAuthService authService) {
+            STDWorkspaceService workspaceService, STDAuthService authService, STDJsonUtils jsonUtils) {
         this.listRepository = listRepository;
         this.workspaceRepository = workspaceRepository;
         this.workspaceService = workspaceService;
         this.authService = authService;
+        this.jsonUtils = jsonUtils;
     }
 
     /**
@@ -109,10 +113,7 @@ public class STDListService implements STDService {
 
         STDWorkspaceModel workspace = workspaceService.getWorkspace(userDetails, wsId);
 
-        String jsonData = requestBody.getJsonData();
-        if (StringUtils.isBlank(jsonData)) {
-            jsonData = "{}";
-        }
+        String jsonData = jsonUtils.getNonEmptyJson(requestBody.getJsonData());
         // @formatter:off
         STDListModel model = STDListModel.builder()
                                             .name(requestBody.getName())
@@ -192,6 +193,7 @@ public class STDListService implements STDService {
         newWorkspace.getLists().add(list);
 
         list.setWorkspace(newWorkspace);
+
         return listRepository.saveAndFlush(list);
     }
 

@@ -4,7 +4,6 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +32,7 @@ import de.calltopower.simpletodo.impl.model.STDUserVerificationTokenModel;
 import de.calltopower.simpletodo.impl.properties.STDSettingsProperties;
 import de.calltopower.simpletodo.impl.requestbody.STDSigninRequestBody;
 import de.calltopower.simpletodo.impl.requestbody.STDSignupRequestBody;
+import de.calltopower.simpletodo.impl.utils.STDJsonUtils;
 import de.calltopower.simpletodo.impl.utils.STDTokenUtils;
 
 /**
@@ -46,6 +46,7 @@ public class STDAuthService implements STDService {
     private AuthenticationManager authenticationManager;
     private PasswordEncoder encoder;
     private STDTokenUtils jwtUtils;
+    private STDJsonUtils jsonUtils;
     private STDUserRepository userRepository;
     private STDRoleService roleService;
     private STDSettingsProperties functionalProperties;
@@ -58,6 +59,7 @@ public class STDAuthService implements STDService {
      * @param authenticationManager          The authentication manager
      * @param encoder                        The encoder
      * @param jwtUtils                       The JWT utilities
+     * @param jsonUtils                      The Json utilities
      * @param userRepository                 The user repository
      * @param roleService                    The role service
      * @param functionalProperties           Functional properties
@@ -66,11 +68,13 @@ public class STDAuthService implements STDService {
      */
     @Autowired
     public STDAuthService(AuthenticationManager authenticationManager, PasswordEncoder encoder, STDTokenUtils jwtUtils,
-            STDUserRepository userRepository, STDRoleService roleService, STDSettingsProperties functionalProperties,
-            STDEmailService emailService, STDUserVerificationTokensRepository userActivationTokensRepository) {
+            STDJsonUtils jsonUtils, STDUserRepository userRepository, STDRoleService roleService,
+            STDSettingsProperties functionalProperties, STDEmailService emailService,
+            STDUserVerificationTokensRepository userActivationTokensRepository) {
         this.authenticationManager = authenticationManager;
         this.encoder = encoder;
         this.jwtUtils = jwtUtils;
+        this.jsonUtils = jsonUtils;
         this.userRepository = userRepository;
         this.roleService = roleService;
         this.functionalProperties = functionalProperties;
@@ -108,10 +112,7 @@ public class STDAuthService implements STDService {
             throw new STDUserException("Email is already in use");
         }
 
-        String jsonData = requestBody.getJsonData();
-        if (StringUtils.isBlank(jsonData)) {
-            jsonData = "{}";
-        }
+        String jsonData = jsonUtils.getNonEmptyJson(requestBody.getJsonData());
         // @formatter:off
         STDUserModel user = STDUserModel.builder()
                                             .username(requestBody.getUsername())

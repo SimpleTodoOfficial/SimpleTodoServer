@@ -22,6 +22,8 @@ public class STDSettingsProperties implements STDProperties {
 
     public static final long DUE_TODOS_MINUTES_PLUS_DEFAULT = 300;
 
+    public static final int MAX_STRING_FILE_CACHE_DEFAULT = 10;
+
     @Value("${" + PREFIX + ".signup}")
     private String signup;
 
@@ -42,6 +44,9 @@ public class STDSettingsProperties implements STDProperties {
 
     @Value("${" + PREFIX + ".duetodos-minutes-plus}")
     private Long dueTodosMinutesPlus;
+
+    @Value("${" + PREFIX + ".cache.file.string.max}")
+    private Integer maxStringFileCacheSize;
 
     @Override
     public String getPrefix() {
@@ -64,6 +69,15 @@ public class STDSettingsProperties implements STDProperties {
      */
     public long getDueTodosMinutesPlus() {
         return dueTodosMinutesPlus == null ? DUE_TODOS_MINUTES_PLUS_DEFAULT : dueTodosMinutesPlus;
+    }
+
+    /**
+     * Returns the max string file cache size
+     * 
+     * @return max string file cache size
+     */
+    public int getMaxStringFileCacheSize() {
+        return maxStringFileCacheSize == null ? MAX_STRING_FILE_CACHE_DEFAULT : maxStringFileCacheSize;
     }
 
 }

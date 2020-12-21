@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import de.calltopower.simpletodo.api.config.STDConfig;
+import de.calltopower.simpletodo.impl.properties.STDSettingsProperties;
 
 /**
  * File content cache
@@ -19,18 +20,20 @@ import de.calltopower.simpletodo.api.config.STDConfig;
 @Component
 public class STDFileContentCache implements STDConfig {
 
-    private static final int MAX_STRING_FILE_CACHE = 10;
+    private static final Logger LOGGER = LoggerFactory.getLogger(STDFileContentCache.class);
 
     private Map<String, String> stringFileCache;
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(STDFileContentCache.class);
+    private STDSettingsProperties settingsProperties;
 
     /**
      * Constructor
      */
     @Autowired
-    public STDFileContentCache() {
-        stringFileCache = new HashMap<>(MAX_STRING_FILE_CACHE);
+    public STDFileContentCache(STDSettingsProperties settingsProperties) {
+        this.settingsProperties = settingsProperties;
+
+        stringFileCache = new HashMap<>(this.settingsProperties.getMaxStringFileCacheSize());
     }
 
     /**
@@ -61,7 +64,8 @@ public class STDFileContentCache implements STDConfig {
      * @return The value
      */
     public String cache(String key, String value) {
-        if (!stringFileCache.containsKey(key) && stringFileCache.size() >= MAX_STRING_FILE_CACHE) {
+        if (!stringFileCache.containsKey(key)
+                && stringFileCache.size() >= this.settingsProperties.getMaxStringFileCacheSize()) {
             List<String> keys = stringFileCache.keySet().stream().collect(Collectors.toList());
             Collections.shuffle(keys);
             keys.remove(keys.size() - 1);
