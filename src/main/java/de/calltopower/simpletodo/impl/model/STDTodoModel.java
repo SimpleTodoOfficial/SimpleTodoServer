@@ -63,6 +63,9 @@ public class STDTodoModel implements Serializable, STDModel {
     @Column(name = "STR_MSG")
     private String msg;
 
+    @Column(name = "STR_URL")
+    private String url;
+
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "DATE_DUE")
     private Date dueDate;
@@ -87,11 +90,13 @@ public class STDTodoModel implements Serializable, STDModel {
                     + "id='%s',"
                     + "createdDate='%s',"
                     + "msg='%s',"
+                    + "url='%s',"
                     + "dateDue='%s',"
                 + "]",
                 id,
                 createdDate,
                 msg,
+                url != null ? url : "",
                 dueDate != null ? dueDate : "-"
                 );
         // @formatter:on

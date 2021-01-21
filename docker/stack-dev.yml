@@ -3,7 +3,7 @@ version: '3.1'
 services:
 
   db:
-    image: calltopower/simpletodo-db:1.5.4
+    image: calltopower/simpletodo-db:1.5.5
     restart: always
     volumes:
       - ./db/data:/bitnami/mariadb
@@ -16,7 +16,7 @@ services:
       - MARIADB_DATABASE=simpletodo
 
   flyway:
-    image: calltopower/simpletodo-flyway:1.5.4
+    image: calltopower/simpletodo-flyway:1.5.5
     command: migrate
     volumes:
       - ./flyway/config:/flyway/conf

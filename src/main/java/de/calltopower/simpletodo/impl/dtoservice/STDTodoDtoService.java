@@ -29,6 +29,7 @@ public class STDTodoDtoService implements STDDtoService<STDTodoDto, STDTodoModel
                 .id(model.getId())
                 //.createdDate(model.getCreatedDate())
                 .msg(model.getMsg())
+                .url(model.getUrl())
                 .done(model.isStatusDone())
                 .dueDate(model.getDueDate())
                 .workspaceId(model.getList().getWorkspace().getId())

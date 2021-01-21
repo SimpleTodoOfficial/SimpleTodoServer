@@ -20,19 +20,28 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode(callSuper = false)
 public class STDTodoRequestBody implements STDRequestBody {
 
-    @NotBlank
-    @Size(max = 1024)
-    private String msg;
+	@NotBlank
+	@Size(max = 1024)
+	private String msg;
 
-    private String dueDate;
+	@Size(max = 1024)
+	private String url;
 
-    private boolean done;
+	private String dueDate;
 
-    private String jsonData;
+	private boolean done;
 
-    @Override
-    public String toString() {
-        return String.format("STDTodoRequestBody[msg=%s, dueDate=%s, jsonData=%s]", msg, dueDate, jsonData);
-    }
+	private String jsonData;
+
+	@Override
+	public String toString() {
+		// @formatter:off
+        return String.format("STDTodoRequestBody[msg=%s, url=%s, dueDate=%s, jsonData=%s]",
+        		msg,
+        		url != null ? url : "",
+        		dueDate,
+        		jsonData);
+    	// @formatter:on
+	}
 
 }

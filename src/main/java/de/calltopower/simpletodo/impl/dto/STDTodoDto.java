@@ -34,6 +34,10 @@ public class STDTodoDto implements STDDto<STDTodoModel> {
 
     @SuppressWarnings("javadoc")
     @JsonProperty
+    public String url;
+
+    @SuppressWarnings("javadoc")
+    @JsonProperty
     public Boolean done;
 
     @SuppressWarnings("javadoc")
