@@ -121,6 +121,7 @@ public class STDEmailService implements STDService {
             String content = emailTemplateService.buildVerifyEmailAddress(user.getId().toString(),
                     model.getId().toString());
             messageHelper.setText(content, true);
+            LOGGER.info(content);
         };
 
         javaMailSender.send(messagePreparator);

@@ -21,7 +21,6 @@ import de.calltopower.simpletodo.impl.db.repository.STDUserRepository;
 import de.calltopower.simpletodo.impl.db.repository.STDUserVerificationTokensRepository;
 import de.calltopower.simpletodo.impl.enums.STDUserRole;
 import de.calltopower.simpletodo.impl.exception.STDFunctionalException;
-import de.calltopower.simpletodo.impl.exception.STDGeneralException;
 import de.calltopower.simpletodo.impl.exception.STDNotFoundException;
 import de.calltopower.simpletodo.impl.exception.STDUserException;
 import de.calltopower.simpletodo.impl.model.STDRoleModel;
@@ -36,84 +35,85 @@ import de.calltopower.simpletodo.impl.utils.STDJsonUtils;
 import de.calltopower.simpletodo.impl.utils.STDTokenUtils;
 
 /**
- * Service for user results
+ * Service for auth results
  */
 @Service
 public class STDAuthService implements STDService {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(STDAuthService.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(STDAuthService.class);
 
-    private AuthenticationManager authenticationManager;
-    private PasswordEncoder encoder;
-    private STDTokenUtils jwtUtils;
-    private STDJsonUtils jsonUtils;
-    private STDUserRepository userRepository;
-    private STDRoleService roleService;
-    private STDSettingsProperties functionalProperties;
-    private STDEmailService emailService;
-    private STDUserVerificationTokensRepository userActivationTokensRepository;
+	private AuthenticationManager authenticationManager;
+	private PasswordEncoder encoder;
+	private STDTokenUtils jwtUtils;
+	private STDJsonUtils jsonUtils;
+	private STDUserRepository userRepository;
+	private STDRoleService roleService;
+	private STDSettingsProperties functionalProperties;
+	private STDUserVerificationTokensRepository userActivationTokensRepository;
+	private STDUserActionService userActionService;
 
-    /**
-     * Initializes the service
-     * 
-     * @param authenticationManager          The authentication manager
-     * @param encoder                        The encoder
-     * @param jwtUtils                       The JWT utilities
-     * @param jsonUtils                      The Json utilities
-     * @param userRepository                 The user repository
-     * @param roleService                    The role service
-     * @param functionalProperties           Functional properties
-     * @param emailService                   Email service
-     * @param userActivationTokensRepository user activation tokens repository
-     */
-    @Autowired
-    public STDAuthService(AuthenticationManager authenticationManager, PasswordEncoder encoder, STDTokenUtils jwtUtils,
-            STDJsonUtils jsonUtils, STDUserRepository userRepository, STDRoleService roleService,
-            STDSettingsProperties functionalProperties, STDEmailService emailService,
-            STDUserVerificationTokensRepository userActivationTokensRepository) {
-        this.authenticationManager = authenticationManager;
-        this.encoder = encoder;
-        this.jwtUtils = jwtUtils;
-        this.jsonUtils = jsonUtils;
-        this.userRepository = userRepository;
-        this.roleService = roleService;
-        this.functionalProperties = functionalProperties;
-        this.emailService = emailService;
-        this.userActivationTokensRepository = userActivationTokensRepository;
-    }
+	/**
+	 * Initializes the service
+	 * 
+	 * @param authenticationManager          The authentication manager
+	 * @param encoder                        The encoder
+	 * @param jwtUtils                       The JWT utilities
+	 * @param jsonUtils                      The Json utilities
+	 * @param userRepository                 The user repository
+	 * @param roleService                    The role service
+	 * @param functionalProperties           Functional properties
+	 * @param userActivationTokensRepository user activation tokens repository
+	 * @param userActionService              The user action service
+	 */
+	@Autowired
+	public STDAuthService(AuthenticationManager authenticationManager, PasswordEncoder encoder, STDTokenUtils jwtUtils,
+			STDJsonUtils jsonUtils, STDUserRepository userRepository, STDRoleService roleService,
+			STDSettingsProperties functionalProperties,
+			STDUserVerificationTokensRepository userActivationTokensRepository,
+			STDUserActionService userActionService) {
+		this.authenticationManager = authenticationManager;
+		this.encoder = encoder;
+		this.jwtUtils = jwtUtils;
+		this.jsonUtils = jsonUtils;
+		this.userRepository = userRepository;
+		this.roleService = roleService;
+		this.functionalProperties = functionalProperties;
+		this.userActivationTokensRepository = userActivationTokensRepository;
+		this.userActionService = userActionService;
+	}
 
-    /**
-     * Signs up a user
-     * 
-     * @param requestBody The signup request body
-     * @param userDetails User details. My be empty if registering
-     * @return A user model
-     */
-    @Transactional(readOnly = false)
-    public STDUserModel signup(STDSignupRequestBody requestBody, UserDetails userDetails) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug(String.format("Requesting signup new user: \"%s\"", requestBody));
-        }
+	/**
+	 * Signs up a user
+	 * 
+	 * @param requestBody The signup request body
+	 * @param userDetails User details. My be empty if registering
+	 * @return A user model
+	 */
+	@Transactional(readOnly = false)
+	public STDUserModel signup(STDSignupRequestBody requestBody, UserDetails userDetails) {
+		if (LOGGER.isDebugEnabled()) {
+			LOGGER.debug(String.format("Requesting signup new user: \"%s\"", requestBody));
+		}
 
-        if (userDetails == null && !functionalProperties.signupAllowed()) {
-            LOGGER.error("New users are not allowed to register themselves");
-            throw new STDFunctionalException("New users are not allowed to register themselves.");
-        }
+		if (userDetails == null && !functionalProperties.signupAllowed()) {
+			LOGGER.error("New users are not allowed to register themselves");
+			throw new STDFunctionalException("New users are not allowed to register themselves.");
+		}
 
-        Boolean existsByUsername = userRepository.existsByUsername(requestBody.getUsername());
-        if (existsByUsername != null && existsByUsername.booleanValue()) {
-            LOGGER.error("Username is already taken");
-            throw new STDUserException("Username is already taken");
-        }
+		Boolean existsByUsername = userRepository.existsByUsername(requestBody.getUsername());
+		if (existsByUsername != null && existsByUsername.booleanValue()) {
+			LOGGER.error("Username is already taken");
+			throw new STDUserException("Username is already taken");
+		}
 
-        Boolean existsByEmail = userRepository.existsByEmail(requestBody.getEmail());
-        if (existsByEmail != null && existsByEmail.booleanValue()) {
-            LOGGER.error("Email is already in use");
-            throw new STDUserException("Email is already in use");
-        }
+		Boolean existsByEmail = userRepository.existsByEmail(requestBody.getEmail());
+		if (existsByEmail != null && existsByEmail.booleanValue()) {
+			LOGGER.error("Email is already in use");
+			throw new STDUserException("Email is already in use");
+		}
 
-        String jsonData = jsonUtils.getNonEmptyJson(requestBody.getJsonData());
-        // @formatter:off
+		String jsonData = jsonUtils.getNonEmptyJson(requestBody.getJsonData());
+		// @formatter:off
         STDUserModel user = STDUserModel.builder()
                                             .username(requestBody.getUsername())
                                             .email(requestBody.getEmail())
@@ -122,45 +122,45 @@ public class STDAuthService implements STDService {
                                         .build();
         // @formatter:on
 
-        Set<STDRoleModel> roles = new HashSet<>();
-        roles.add(roleService.getStandardUserRole());
-        user.setRoles(roles);
+		Set<STDRoleModel> roles = new HashSet<>();
+		roles.add(roleService.getStandardUserRole());
+		user.setRoles(roles);
 
-        user = userRepository.saveAndFlush(user);
+		user = userRepository.saveAndFlush(user);
 
-        sendEmailAccountCreated(user);
-        processUserActivation(user, user.getEmail());
+		userActionService.sendEmailAccountCreated(user);
+		processUserActivation(user, user.getEmail());
 
-        return user;
-    }
+		return user;
+	}
 
-    /**
-     * Signs up a user
-     * 
-     * @param requestBody The signin request body
-     * @return A token model
-     */
-    @Transactional(readOnly = false)
-    public STDTokenModel signin(STDSigninRequestBody requestBody) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug(String.format("Requesting signing in user: \"%s\"", requestBody));
-        }
+	/**
+	 * Signs up a user
+	 * 
+	 * @param requestBody The signin request body
+	 * @return A token model
+	 */
+	@Transactional(readOnly = false)
+	public STDTokenModel signin(STDSigninRequestBody requestBody) {
+		if (LOGGER.isDebugEnabled()) {
+			LOGGER.debug(String.format("Requesting signing in user: \"%s\"", requestBody));
+		}
 
-        Authentication authentication;
-        try {
-            authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(requestBody.getUsername(), requestBody.getPassword()));
-        } catch (Exception ex) {
-            LOGGER.error("Could not authenticate");
-            throw new STDUserException("Could not authenticate");
-        }
+		Authentication authentication;
+		try {
+			authentication = authenticationManager.authenticate(
+					new UsernamePasswordAuthenticationToken(requestBody.getUsername(), requestBody.getPassword()));
+		} catch (Exception ex) {
+			LOGGER.error("Could not authenticate");
+			throw new STDUserException("Could not authenticate");
+		}
 
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        String jwt = jwtUtils.generateJwtToken(authentication);
+		SecurityContextHolder.getContext().setAuthentication(authentication);
+		String jwt = jwtUtils.generateJwtToken(authentication);
 
-        STDUserDetailsImpl userDetails = (STDUserDetailsImpl) authentication.getPrincipal();
+		STDUserDetailsImpl userDetails = (STDUserDetailsImpl) authentication.getPrincipal();
 
-        // @formatter:off
+		// @formatter:off
         return STDTokenModel.builder()
                 .token(jwt)
                 .user(authenticate((userDetails)))
@@ -193,80 +193,46 @@ public class STDAuthService implements STDService {
                                 .map(r -> r.getName())
                                 .anyMatch(r -> r.equals(STDUserRole.ROLE_ADMIN));
         // @formatter:on
-    }
+	}
 
-    /**
-     * Checks whether the userDetails user is the requested authenticated user with
-     * ID strId
-     * 
-     * @param userDetails The user details
-     * @param strId       The requested ID
-     * @return true if the userDetails user is the requested authenticated user with
-     *         ID strId, false else
-     */
-    @Transactional(readOnly = true)
-    public boolean isAdminOrRequestedUser(STDUserModel user, String strId) {
-        return user != null && (isAdmin(user) || user.getId().equals(UUID.fromString(strId)));
-    }
+	/**
+	 * Checks whether the userDetails user is the requested authenticated user with
+	 * ID strId
+	 * 
+	 * @param userDetails The user details
+	 * @param strId       The requested ID
+	 * @return true if the userDetails user is the requested authenticated user with
+	 *         ID strId, false else
+	 */
+	@Transactional(readOnly = true)
+	public boolean isAdminOrRequestedUser(STDUserModel user, String strId) {
+		return user != null && (isAdmin(user) || user.getId().equals(UUID.fromString(strId)));
+	}
 
-    /**
-     * Checks whether the userDetails user is the requested authenticated user with
-     * ID strId
-     * 
-     * @param userDetails The user details
-     * @param strId       The requested ID
-     * @return true if the userDetails user is the requested authenticated user with
-     *         ID strId, false else
-     */
-    @Transactional(readOnly = true)
-    public boolean isAdminOrRequestedUser(UserDetails userDetails, String strId) {
-        return isAdminOrRequestedUser(authenticate(userDetails), strId);
-    }
+	/**
+	 * Checks whether the userDetails user is the requested authenticated user with
+	 * ID strId
+	 * 
+	 * @param userDetails The user details
+	 * @param strId       The requested ID
+	 * @return true if the userDetails user is the requested authenticated user with
+	 *         ID strId, false else
+	 */
+	@Transactional(readOnly = true)
+	public boolean isAdminOrRequestedUser(UserDetails userDetails, String strId) {
+		return isAdminOrRequestedUser(authenticate(userDetails), strId);
+	}
 
-    private void sendEmailAccountCreated(STDUserModel user) {
-        LOGGER.debug("Sending account created email");
-        try {
-            emailService.sendAccountCreatedEmail(user.getEmail(), user);
-        } catch (Exception ex) {
-            LOGGER.error("Something went wrong with the email service: ", ex);
-        }
-    }
+	protected void processUserActivation(STDUserModel user, String newEmail) {
+		LOGGER.debug(String.format("Deleting all old user activation tokens for user with ID \"%s\"", user.getId()));
+		userActionService.deleteAllUserActivationTokensForUserId(user.getId());
 
-    // TODO: Duplicate of STDUserService::sendEmailVerifyEmailAddress
-    private void sendEmailVerifyEmailAddress(STDUserModel user, String newEmail, STDUserVerificationTokenModel model) {
-        LOGGER.debug("Sending verify email address email");
-        try {
-            emailService.sendVerifyEmailAddressEmail(newEmail, user, model);
-        } catch (Exception ex) {
-            LOGGER.error("Something went wrong with the email service: ", ex);
-        }
-    }
+		STDUserVerificationTokenModel model = STDUserVerificationTokenModel.builder().userId(user.getId()).build();
+		model = userActivationTokensRepository.saveAndFlush(model);
 
-    // TODO: Duplicate of STDUserService::deleteAllUserActivationTokensForUserId
-    private void deleteAllUserActivationTokensForUserId(UUID userId) {
-        try {
-            for (STDUserVerificationTokenModel token : userActivationTokensRepository.findAllByUserId(userId)) {
-                userActivationTokensRepository.deleteById(token.getId());
-            }
-        } catch (Exception ex) {
-            String errMsg = String.format(
-                    "Something went wrong deleting all user activation tokens for user with username \"%s\"", userId);
-            LOGGER.error(errMsg);
-            throw new STDGeneralException(errMsg);
-        }
-    }
+		LOGGER.debug(String.format("Saved user activation token with id \"%s\"", model.getId()));
 
-    // TODO: Duplicate of STDUserService::processUserActivation
-    private void processUserActivation(STDUserModel user, String newEmail) {
-        LOGGER.debug(String.format("Deleting all old user activation tokens for user with ID \"%s\"", user.getId()));
-        deleteAllUserActivationTokensForUserId(user.getId());
-
-        STDUserVerificationTokenModel model = STDUserVerificationTokenModel.builder().userId(user.getId()).build();
-        model = userActivationTokensRepository.saveAndFlush(model);
-
-        LOGGER.debug(String.format("Saved user activation token with id \"%s\"", model.getId()));
-
-        sendEmailVerifyEmailAddress(user, newEmail, model);
-    }
+		userActionService.sendEmailVerifyEmailAddress(user, newEmail, model);
+	}
 
 }
