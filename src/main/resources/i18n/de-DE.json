@@ -156,7 +156,7 @@
     "todos.addedit.component.placeholder.url": "URL eingeben",
     "todos.addedit.component.validation.max.url": "URL kann höchstens 1024 Zeichen lang sein",
     "todos.addedit.component.mark_done": "Anwählen, um als \"erledigt\" zu markieren",
-    "todos.addedit.component.set_due_date": "Setze ein Fälligkeits-Datum",
+    "todos.addedit.component.set_due_date": "Ein Fälligkeits-Datum setzen",
     "todos.addedit.component.due_date": "Fälligkeits-Datum",
     "todos.addedit.component.due_time": "Fälligkeits-Zeit",
     "todos.addedit.component.action.save": "Speichern",
