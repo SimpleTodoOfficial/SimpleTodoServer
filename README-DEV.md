@@ -15,6 +15,7 @@ Based on Java, Spring boot, Spring security (token-based authentication), docker
 	- https://docs.docker.com/compose/install/
 	- sudo chmod 666 /var/run/docker.sock
 - sudo chown -R 1001:1001 ./docker/db/data
+- sudo chown $USER /var/run/docker.sock
 
 ## Build for production
 

@@ -12,7 +12,7 @@
     "app.component.error.user.load": "Nutzer konnte nicht geladen werden",
     "app.component.info.sign_out": "Erfolgreich abgemeldet",
     "app.component.error.language_load": "Sprach-Informationen konnten nicht geladen werden.",
-    "app.component.setup.desktopnotifications": "Klicke hier, um Desktop-Benachrichtigungen zu aktivieren.",
+    "app.component.setup.desktopnotifications": "Desktop-Benachrichtigungen aktivieren",
     "app.component.duetodos": "Fällige Todos",
     "app.error.not_accessible": "Die angeforderte Rssource ist nicht verfügbar.",
     "app.error.something_went_wrong": "Etwas ist schief gelaufen.",
