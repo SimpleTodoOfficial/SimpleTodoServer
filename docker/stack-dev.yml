@@ -28,22 +28,3 @@ services:
     restart: always
     ports:
       - 8080:8080
-
-  simpletodo-server:
-    image: simpletodo-server
-    restart: always
-    ports:
-      - 9090:9090
-    depends_on:
-      - db
-    environment:
-      - SPRING_PROFILES_ACTIVE=dev
-      - SPRING_DATASOURCE_USERNAME=admin
-      - SPRING_DATASOURCE_PASSWORD=example
-      - SIMPLETODO_SIGNUP=ENABLED
-      - SIMPLETODO_URL=https://localhost:4200
-      - SIMPLETODO_URL_PASSWORD_RESET=https://<yourUrl>/account/entertoken
-      - SIMPLETODO_URL_PASSWORD_RESET_SUCCESS=https://<yourUrl>/account/signin
-      - SIMPLETODO_URL_USER_VERIFICATION=https://<yourUrl>/users/%s/verify
-      - SIMPLETODO_DUETODOS_MINUTES_PLUS=300
-      - SIMPLETODO_CACHE_FILE_STRING_MAX=10
