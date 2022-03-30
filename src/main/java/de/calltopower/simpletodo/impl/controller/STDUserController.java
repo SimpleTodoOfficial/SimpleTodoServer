@@ -68,7 +68,7 @@ public class STDUserController implements STDController {
     }
 
     @SuppressWarnings("javadoc")
-    @GetMapping(path = "", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @GetMapping(path = "", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public Set<STDUserDto> getAll(@AuthenticationPrincipal UserDetails userDetails) {
         if (LOGGER.isDebugEnabled()) {
@@ -79,7 +79,7 @@ public class STDUserController implements STDController {
     }
 
     @SuppressWarnings("javadoc")
-    @GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public STDUserDto getUser(@NotNull @PathVariable(name = "id") String id,
             @AuthenticationPrincipal UserDetails userDetails) {
@@ -95,7 +95,7 @@ public class STDUserController implements STDController {
     }
 
     @SuppressWarnings("javadoc")
-    @GetMapping(path = "/{id}/duetodos", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @GetMapping(path = "/{id}/duetodos", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public Set<STDTodoDto> getDueTodos(@NotNull @PathVariable(name = "id") String id,
             @AuthenticationPrincipal UserDetails userDetails) {
@@ -107,7 +107,7 @@ public class STDUserController implements STDController {
     }
 
     @SuppressWarnings("javadoc")
-    @PutMapping(path = "/{id}", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @PutMapping(path = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public STDUserDto updateUser(@NotNull @PathVariable(name = "id") String id,
             @NotNull @RequestBody STDUserRequestBody requestBody, @AuthenticationPrincipal UserDetails userDetails) {
@@ -131,7 +131,7 @@ public class STDUserController implements STDController {
     }
 
     @SuppressWarnings("javadoc")
-    @PostMapping(path = "/password/forgot", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @PostMapping(path = "/password/forgot", consumes = MediaType.APPLICATION_JSON_VALUE)
     public void forgotPassword(@Valid @RequestBody STDForgotPasswordRequestBody requestBody) {
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("Requested forgot password");
