@@ -3,7 +3,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath('org.springframework.boot:spring-boot-gradle-plugin:2.1.2.RELEASE')
+        classpath('org.springframework.boot:spring-boot-gradle-plugin:2.6.5')
     }
 }
 
@@ -44,8 +44,8 @@ configurations.all {
 
 dependencies {
     // JAX-B dependencies for JDK 9+
-    implementation 'jakarta.xml.bind:jakarta.xml.bind-api:2.3.2'
-    implementation 'org.glassfish.jaxb:jaxb-runtime:2.3.2'
+    implementation 'jakarta.xml.bind:jakarta.xml.bind-api:2.3.3'
+    implementation 'org.glassfish.jaxb:jaxb-runtime:2.3.6'
 
     implementation('org.springframework.boot:spring-boot-starter-web:2.6.5')
     implementation('org.springframework.boot:spring-boot-starter-data-jpa:2.6.5')
@@ -56,16 +56,16 @@ dependencies {
     implementation('org.springframework.boot:spring-boot-starter-validation:2.6.5')
     implementation('org.springframework.boot:spring-boot-starter-thymeleaf:2.6.5')
     implementation('javax.cache:cache-api:1.1.1')
-    implementation('org.hibernate:hibernate-jcache:5.4.22.Final')
-    implementation('org.ehcache:ehcache:3.9.9')
+    implementation('org.hibernate:hibernate-jcache:5.6.7.Final')
+    implementation('org.ehcache:ehcache:3.10.0')
     implementation('io.jsonwebtoken:jjwt:0.9.1')
     implementation('org.apache.httpcomponents:httpclient:4.5.13')
     implementation('com.google.code.gson:gson:2.9.0')
-    implementation('org.mariadb.jdbc:mariadb-java-client:2.7.5')
-	implementation('org.apache.commons:commons-lang3:3.11')
+    implementation('org.mariadb.jdbc:mariadb-java-client:3.0.4')
+	implementation('org.apache.commons:commons-lang3:3.12.0')
 	
     testImplementation('org.springframework.boot:spring-boot-starter-test:2.6.5')
-    testImplementation('com.h2database:h2:1.4.200')
+    testImplementation('com.h2database:h2:2.1.210')
 
 	compileOnly 'org.projectlombok:lombok:1.18.22'
 	annotationProcessor 'org.projectlombok:lombok:1.18.22'

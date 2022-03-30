@@ -36,20 +36,17 @@ import de.calltopower.simpletodo.impl.service.STDUserDetailsService;
 public class STDWebSecurityConfig extends WebSecurityConfigurerAdapter implements STDConfig {
 
 	private PasswordEncoder passwordEncoder;
+	private STDAuthTokenFilter authTokenFilter;
 	private STDUserDetailsService userDetailsService;
 	private STDAuthEntryPointJwt unauthorizedHandler;
 
 	@Autowired
-	public STDWebSecurityConfig(PasswordEncoder passwordEncoder, STDUserDetailsService userDetailsService,
-			STDAuthEntryPointJwt unauthorizedHandler) {
+	public STDWebSecurityConfig(PasswordEncoder passwordEncoder, STDAuthTokenFilter authTokenFilter,
+			STDUserDetailsService userDetailsService, STDAuthEntryPointJwt unauthorizedHandler) {
 		this.passwordEncoder = passwordEncoder;
+		this.authTokenFilter = authTokenFilter;
 		this.userDetailsService = userDetailsService;
 		this.unauthorizedHandler = unauthorizedHandler;
-	}
-
-	@Bean
-	public STDAuthTokenFilter authenticationJwtTokenFilter() {
-		return new STDAuthTokenFilter();
 	}
 
 	@Override
@@ -80,7 +77,7 @@ public class STDWebSecurityConfig extends WebSecurityConfigurerAdapter implement
                 .anyRequest().authenticated();
         // @formatter:on
 
-		httpSecurity.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
+		httpSecurity.addFilterBefore(authTokenFilter, UsernamePasswordAuthenticationFilter.class);
 	}
 
 }
