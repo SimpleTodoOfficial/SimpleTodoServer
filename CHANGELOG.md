@@ -1,5 +1,9 @@
 # SimpleTodoServer - Changelog
 
+## v1.7.1
+
+- Replaced the notification service with a library
+
 ## v1.7.0
 
 - Java 17
