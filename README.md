@@ -44,10 +44,10 @@ This software is provided via docker. More information in the producation and de
 
 Available docker images:
 
-- calltopower/simpletodo-flyway:1.7.1
-- calltopower/simpletodo-db:1.7.1
-- calltopower/simpletodo-server:1.7.1
-- calltopower/simpletodo-ng:1.7.1
+- calltopower/simpletodo-flyway:1.7.2
+- calltopower/simpletodo-db:1.7.2
+- calltopower/simpletodo-server:1.7.2
+- calltopower/simpletodo-ng:1.7.2
 
 The initially created user/password combination is: Admin/password1
 
