@@ -2,10 +2,6 @@ package de.calltopower.simpletodo.impl.exception;
 
 import java.io.IOException;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.AuthenticationException;
@@ -13,6 +9,8 @@ import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
 
 import de.calltopower.simpletodo.api.exception.STDEntryPoint;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 /**
  * "Auth Entry Point" exception
@@ -26,7 +24,7 @@ public class STDAuthEntryPointJwt implements AuthenticationEntryPoint, STDEntryP
 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response,
-            AuthenticationException authException) throws IOException, ServletException {
+            AuthenticationException authException) throws IOException, jakarta.servlet.ServletException {
         LOGGER.error("Unauthorized error: {}", authException.getMessage());
         throw new STDNotAuthorizedException("Not authorized");
     }

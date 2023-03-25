@@ -2,9 +2,6 @@ package de.calltopower.simpletodo.impl.controller;
 
 import java.util.Set;
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +27,8 @@ import de.calltopower.simpletodo.impl.requestbody.STDForgotPasswordRequestBody;
 import de.calltopower.simpletodo.impl.requestbody.STDUserRequestBody;
 import de.calltopower.simpletodo.impl.service.STDAuthService;
 import de.calltopower.simpletodo.impl.service.STDUserService;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 
 /**
  * User controller

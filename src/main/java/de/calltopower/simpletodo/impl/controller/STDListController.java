@@ -2,8 +2,6 @@ package de.calltopower.simpletodo.impl.controller;
 
 import java.util.Set;
 
-import javax.validation.constraints.NotNull;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +24,7 @@ import de.calltopower.simpletodo.impl.dtoservice.STDListDtoService;
 import de.calltopower.simpletodo.impl.requestbody.STDListMovementRequestBody;
 import de.calltopower.simpletodo.impl.requestbody.STDListRequestBody;
 import de.calltopower.simpletodo.impl.service.STDListService;
+import jakarta.validation.constraints.NotNull;
 
 /**
  * List controller

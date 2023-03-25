@@ -1,5 +1,11 @@
 # SimpleTodoServer - Changelog
 
+## v1.8.0
+
+- Dependency upgrades, most notable
+	- SpringBoot 2 -> SpringBoot 3
+	- Hibernate 5 -> Hibernate 6
+
 ## v1.7.2
 
 - Visual and handling optimizations

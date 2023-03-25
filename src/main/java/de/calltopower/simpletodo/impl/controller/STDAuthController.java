@@ -1,7 +1,5 @@
 package de.calltopower.simpletodo.impl.controller;
 
-import javax.validation.Valid;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +19,7 @@ import de.calltopower.simpletodo.impl.dtoservice.STDUserDtoService;
 import de.calltopower.simpletodo.impl.requestbody.STDSigninRequestBody;
 import de.calltopower.simpletodo.impl.requestbody.STDSignupRequestBody;
 import de.calltopower.simpletodo.impl.service.STDAuthService;
+import jakarta.validation.Valid;
 
 /**
  * Authentication controller
