@@ -240,7 +240,7 @@ GET
 
 ### URL
 
-http://localhost:9090/api/workspaces/WSID/lists
+http://localhost:9090/api/lists/WSID
 
 ### Headers
 
@@ -259,7 +259,7 @@ GET
 
 ### URL
 
-http://localhost:9090/api/workspaces/WSID/lists/LID
+http://localhost:9090/api/lists/WSID/LID
 
 ### Headers
 
@@ -278,7 +278,7 @@ POST
 
 ### URL
 
-http://localhost:9090/api/workspaces/WSID/lists
+http://localhost:9090/api/lists/WSID
 
 ### Headers
 
@@ -303,7 +303,7 @@ PUT
 
 ### URL
 
-http://localhost:9090/api/workspaces/WSID/lists/LID
+http://localhost:9090/api/lists/WSID/LID
 
 ### Headers
 
@@ -328,7 +328,7 @@ PUT
 
 ### URL
 
-http://localhost:9090/api/workspaces/WSID/lists/LID/move
+http://localhost:9090/api/lists/WSID/LID/move
 
 ### Headers
 
@@ -353,7 +353,7 @@ DELETE
 
 ### URL
 
-http://localhost:9090/api/workspaces/WSID/lists/LID
+http://localhost:9090/api/lists/WSID/LID
 
 ### Headers
 
@@ -374,7 +374,7 @@ GET
 
 ### URL
 
-http://localhost:9090/api/workspaces/WSID/lists/LID/todos
+http://localhost:9090/api/todos/WSID/LID
 
 ### Headers
 
@@ -393,7 +393,7 @@ GET
 
 ### URL
 
-http://localhost:9090/api/workspaces/WSID/lists/LID/todos/TID
+http://localhost:9090/api/todos/WSID/LID/TID
 
 ### Headers
 
@@ -412,7 +412,7 @@ POST
 
 ### URL
 
-http://localhost:9090/api/workspaces/WSID/lists/LID/todos
+http://localhost:9090/api/todos/WSID/LID
 
 ### Headers
 
@@ -438,7 +438,7 @@ PUT
 
 ### URL
 
-http://localhost:9090/api/workspaces/WSID/lists/LID/todos/TID
+http://localhost:9090/api/todos/WSID/LID/TID
 
 ### Headers
 
@@ -464,7 +464,7 @@ PUT
 
 ### URL
 
-http://localhost:9090/api/workspaces/WSID/lists/LID/todos/TID/move
+http://localhost:9090/api/todos/WSID/LID/TID/move
 
 ### Headers
 
@@ -489,7 +489,7 @@ DELETE
 
 ### URL
 
-http://localhost:9090/api/workspaces/WSID/lists/LID/todos/TID
+http://localhost:9090/api/todos/WSID/LID/TID
 
 ### Headers
 
