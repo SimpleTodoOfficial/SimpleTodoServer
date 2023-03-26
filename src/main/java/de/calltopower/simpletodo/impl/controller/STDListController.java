@@ -38,12 +38,7 @@ public class STDListController implements STDController {
     /**
      * The controller path
      */
-    public static final String PATH = STDWorkspaceController.PATH;
-
-    /**
-     * The controller path - list
-     */
-    public static final String PATH_LIST = "/lists";
+    public static final String PATH = APIPATH + "/lists";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(STDListController.class);
 
@@ -63,7 +58,7 @@ public class STDListController implements STDController {
     }
 
     @SuppressWarnings("javadoc")
-    @GetMapping(path = "/{wsId}/" + PATH_LIST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(path = "/{wsId}", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public Set<STDListDto> getAllListsForWorkspace(@NotNull @PathVariable(name = "wsId") String wsId,
             @AuthenticationPrincipal UserDetails userDetails) {
@@ -75,7 +70,7 @@ public class STDListController implements STDController {
     }
 
     @SuppressWarnings("javadoc")
-    @GetMapping(path = "/{wsId}/" + PATH_LIST + "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(path = "/{wsId}/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public STDListDto getList(@NotNull @PathVariable(name = "wsId") String wsId,
             @NotNull @PathVariable(name = "id") String id, @AuthenticationPrincipal UserDetails userDetails) {
@@ -87,7 +82,7 @@ public class STDListController implements STDController {
     }
 
     @SuppressWarnings("javadoc")
-    @PostMapping(path = "/{wsId}/" + PATH_LIST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(path = "/{wsId}", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public STDListDto createList(@NotNull @PathVariable(name = "wsId") String wsId,
             @NotNull @RequestBody STDListRequestBody requestBody, @AuthenticationPrincipal UserDetails userDetails) {
@@ -99,7 +94,7 @@ public class STDListController implements STDController {
     }
 
     @SuppressWarnings("javadoc")
-    @PutMapping(path = "/{wsId}/" + PATH_LIST + "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(path = "/{wsId}/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public STDListDto updateList(@NotNull @PathVariable(name = "wsId") String wsId,
             @NotNull @PathVariable(name = "id") String id, @NotNull @RequestBody STDListRequestBody requestBody,
@@ -112,7 +107,7 @@ public class STDListController implements STDController {
     }
 
     @SuppressWarnings("javadoc")
-    @PutMapping(path = "/{wsId}/" + PATH_LIST + "/{id}/move", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(path = "/{wsId}/{id}/move", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public STDListDto moveList(@NotNull @PathVariable(name = "wsId") String wsId,
             @NotNull @PathVariable(name = "id") String id, @NotNull @RequestBody STDListMovementRequestBody requestBody,
@@ -125,7 +120,7 @@ public class STDListController implements STDController {
     }
 
     @SuppressWarnings("javadoc")
-    @DeleteMapping(path = "/{wsId}/" + PATH_LIST + "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @DeleteMapping(path = "/{wsId}/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public void deleteList(@NotNull @PathVariable(name = "wsId") String wsId,
             @NotNull @PathVariable(name = "id") String id, @AuthenticationPrincipal UserDetails userDetails) {
