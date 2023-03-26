@@ -2,8 +2,6 @@ package de.calltopower.simpletodo.impl.controller;
 
 import java.util.Set;
 
-import javax.validation.constraints.NotNull;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +23,7 @@ import de.calltopower.simpletodo.impl.dto.STDWorkspaceDto;
 import de.calltopower.simpletodo.impl.dtoservice.STDWorkspaceDtoService;
 import de.calltopower.simpletodo.impl.requestbody.STDWorkspaceRequestBody;
 import de.calltopower.simpletodo.impl.service.STDWorkspaceService;
+import jakarta.validation.constraints.NotNull;
 
 /**
  * Workspace controller

@@ -2,9 +2,8 @@ package de.calltopower.simpletodo.impl.model;
 
 import java.io.Serializable;
 
-import javax.persistence.Embeddable;
-
 import de.calltopower.simpletodo.api.model.STDModel;
+import jakarta.persistence.Embeddable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

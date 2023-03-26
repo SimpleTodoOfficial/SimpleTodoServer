@@ -2,8 +2,6 @@ package de.calltopower.simpletodo.impl.controller;
 
 import java.util.Set;
 
-import javax.validation.constraints.NotNull;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +24,7 @@ import de.calltopower.simpletodo.impl.dtoservice.STDTodoDtoService;
 import de.calltopower.simpletodo.impl.requestbody.STDTodoMovementRequestBody;
 import de.calltopower.simpletodo.impl.requestbody.STDTodoRequestBody;
 import de.calltopower.simpletodo.impl.service.STDTodoService;
+import jakarta.validation.constraints.NotNull;
 
 /**
  * Todo controller
@@ -40,12 +39,7 @@ public class STDTodoController implements STDController {
     /**
      * The controller path
      */
-    public static final String PATH = STDWorkspaceController.PATH;
-
-    /**
-     * The controller path - list
-     */
-    public static final String PATH_TODO = "/todos";
+    public static final String PATH = APIPATH + "/todos";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(STDController.class);
 
@@ -65,8 +59,7 @@ public class STDTodoController implements STDController {
     }
 
     @SuppressWarnings("javadoc")
-    @GetMapping(path = "/{wsId}/" + STDListController.PATH_LIST + "/{lId}/"
-            + PATH_TODO, produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(path = "/{wsId}/{lId}", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public Set<STDTodoDto> getAllForList(@NotNull @PathVariable(name = "wsId") String wsId,
             @NotNull @PathVariable(name = "lId") String lId, @AuthenticationPrincipal UserDetails userDetails) {
@@ -78,8 +71,7 @@ public class STDTodoController implements STDController {
     }
 
     @SuppressWarnings("javadoc")
-    @GetMapping(path = "/{wsId}/" + STDListController.PATH_LIST + "/{lId}/" + PATH_TODO
-            + "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(path = "/{wsId}/{lId}/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public STDTodoDto getTodo(@NotNull @PathVariable(name = "wsId") String wsId,
             @NotNull @PathVariable(name = "lId") String lId, @NotNull @PathVariable(name = "id") String id,
@@ -92,8 +84,7 @@ public class STDTodoController implements STDController {
     }
 
     @SuppressWarnings("javadoc")
-    @PostMapping(path = "/{wsId}/" + STDListController.PATH_LIST + "/{lId}/"
-            + PATH_TODO, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(path = "/{wsId}/{lId}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public STDTodoDto createTodo(@NotNull @PathVariable(name = "wsId") String wsId,
             @NotNull @PathVariable(name = "lId") String lId, @NotNull @RequestBody STDTodoRequestBody requestBody,
@@ -106,8 +97,7 @@ public class STDTodoController implements STDController {
     }
 
     @SuppressWarnings("javadoc")
-    @PutMapping(path = "/{wsId}/" + STDListController.PATH_LIST + "/{lId}/" + PATH_TODO
-            + "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(path = "/{wsId}/{lId}/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public STDTodoDto updateTodo(@NotNull @PathVariable(name = "wsId") String wsId,
             @NotNull @PathVariable(name = "lId") String lId, @NotNull @PathVariable(name = "id") String id,
@@ -120,8 +110,7 @@ public class STDTodoController implements STDController {
     }
 
     @SuppressWarnings("javadoc")
-    @PutMapping(path = "/{wsId}/" + STDListController.PATH_LIST + "/{lId}/" + PATH_TODO
-            + "/{id}/move", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(path = "/{wsId}/{lId}/{id}/move", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public STDTodoDto moveTodo(@NotNull @PathVariable(name = "wsId") String wsId,
             @NotNull @PathVariable(name = "lId") String lId, @NotNull @PathVariable(name = "id") String id,
@@ -135,7 +124,7 @@ public class STDTodoController implements STDController {
     }
 
     @SuppressWarnings("javadoc")
-    @DeleteMapping(path = "/{wsId}/" + STDListController.PATH_LIST + "/{lId}/" + PATH_TODO + "/{id}")
+    @DeleteMapping(path = "/{wsId}/{lId}/{id}")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public void deleteTodo(@NotNull @PathVariable(name = "wsId") String wsId,
             @NotNull @PathVariable(name = "lId") String lId, @NotNull @PathVariable(name = "id") String id,

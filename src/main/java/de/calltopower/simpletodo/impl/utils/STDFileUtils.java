@@ -59,7 +59,6 @@ public class STDFileUtils implements STDUtils {
         if (is != null) {
             try (BufferedReader reader = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8))) {
                 String fileContent = reader.lines().collect(Collectors.joining(System.lineSeparator()));
-                System.out.println(fileContent);
                 return fileContentCache.cache(fileName, fileContent);
             }
         } else {

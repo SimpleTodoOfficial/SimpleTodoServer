@@ -6,8 +6,6 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
-import javax.persistence.QueryHint;
-
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.jpa.repository.QueryHints;
@@ -16,6 +14,7 @@ import org.springframework.stereotype.Repository;
 
 import de.calltopower.simpletodo.impl.model.STDListModel;
 import de.calltopower.simpletodo.impl.model.STDTodoModel;
+import jakarta.persistence.QueryHint;
 
 /**
  * Todo model repository

@@ -26,6 +26,7 @@ import org.springframework.context.annotation.PropertySources;
     DataSourceTransactionManagerAutoConfiguration.class,
     HibernateJpaAutoConfiguration.class
 })*/
+// @EnableJpaRepositories
 //@formatter:on
 public class STDApplication {
 

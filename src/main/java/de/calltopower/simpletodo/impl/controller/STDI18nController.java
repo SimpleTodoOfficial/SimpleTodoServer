@@ -1,7 +1,5 @@
 package de.calltopower.simpletodo.impl.controller;
 
-import javax.validation.constraints.NotNull;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +15,7 @@ import de.calltopower.simpletodo.impl.dto.STDTranslationsDto;
 import de.calltopower.simpletodo.impl.dtoservice.STDLanguagesDtoService;
 import de.calltopower.simpletodo.impl.dtoservice.STDTranslationsDtoService;
 import de.calltopower.simpletodo.impl.service.STDI18nService;
+import jakarta.validation.constraints.NotNull;
 
 /**
  * I18n controller

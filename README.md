@@ -4,7 +4,7 @@ A server for simple Todo tracking.
 
 ## Copyright
 
-2020-2022 Denis Meyer, https://github.com/CallToPower
+2020-2023 Denis Meyer, https://github.com/CallToPower
 
 ## Concept
 
@@ -44,10 +44,10 @@ This software is provided via docker. More information in the producation and de
 
 Available docker images:
 
-- calltopower/simpletodo-flyway:1.7.2
-- calltopower/simpletodo-db:1.7.2
-- calltopower/simpletodo-server:1.7.2
-- calltopower/simpletodo-ng:1.7.2
+- calltopower/simpletodo-flyway:1.8.0
+- calltopower/simpletodo-db:1.8.0
+- calltopower/simpletodo-server:1.8.0
+- calltopower/simpletodo-ng:1.8.0
 
 The initially created user/password combination is: Admin/password1
 
