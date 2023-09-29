@@ -7,7 +7,7 @@ WORKDIR /build/
 
 RUN gradle build --no-daemon
 
-FROM eclipse-temurin:17.0.6_10-jdk
+FROM eclipse-temurin:17.0.8.1_1-jdk
 
 WORKDIR /app
 

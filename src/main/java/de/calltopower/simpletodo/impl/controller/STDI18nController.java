@@ -50,7 +50,6 @@ public class STDI18nController implements STDController {
         this.translationsDtoService = translationsDtoService;
     }
 
-    @SuppressWarnings("javadoc")
     @GetMapping(path = "/languages", produces = MediaType.APPLICATION_JSON_VALUE)
     public STDLanguagesDto getLanguages() {
         if (LOGGER.isDebugEnabled()) {
@@ -60,7 +59,6 @@ public class STDI18nController implements STDController {
         return languagesDtoService.convert(i18nService.getLanguages());
     }
 
-    @SuppressWarnings("javadoc")
     @GetMapping(path = "/languages/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public STDTranslationsDto getTranslations(@NotNull @PathVariable(name = "id") String id) {
         if (LOGGER.isDebugEnabled()) {

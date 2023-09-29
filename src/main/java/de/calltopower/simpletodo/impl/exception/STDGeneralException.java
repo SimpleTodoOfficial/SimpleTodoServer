@@ -13,17 +13,14 @@ public class STDGeneralException extends RuntimeException implements STDExceptio
 
     private static final long serialVersionUID = 7422448735206699827L;
 
-    @SuppressWarnings("javadoc")
     public STDGeneralException() {
         super();
     }
 
-    @SuppressWarnings("javadoc")
     public STDGeneralException(String msg) {
         super(msg);
     }
 
-    @SuppressWarnings("javadoc")
     public STDGeneralException(Exception e) {
         super(e);
     }

@@ -28,7 +28,6 @@ public class STDErrorController implements STDController, ErrorController {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(STDErrorController.class);
 
-	@SuppressWarnings("javadoc")
 	@RequestMapping(value = PATH_ERROR)
 	public void error() {
 		if (LOGGER.isDebugEnabled()) {

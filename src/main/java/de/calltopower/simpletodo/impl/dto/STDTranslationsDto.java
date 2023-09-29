@@ -17,7 +17,6 @@ import lombok.Data;
 @JsonInclude(Include.NON_EMPTY)
 public class STDTranslationsDto implements STDDto<STDTranslationsModel> {
 
-    @SuppressWarnings("javadoc")
     @JsonProperty
     public String translations;
 

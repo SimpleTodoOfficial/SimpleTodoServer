@@ -54,7 +54,6 @@ public class STDAuthController implements STDController {
         this.tokenDtoService = tokenDtoService;
     }
 
-    @SuppressWarnings("javadoc")
     @PostMapping(path = "/signup", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public STDUserDto registerUser(@Valid @RequestBody STDSignupRequestBody requestBody,
             @AuthenticationPrincipal UserDetails userDetails) {
@@ -65,7 +64,6 @@ public class STDAuthController implements STDController {
         return userDtoService.convert(authService.signup(requestBody, userDetails));
     }
 
-    @SuppressWarnings("javadoc")
     @PostMapping(path = "/signin", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public STDTokenDto authenticateUser(@Valid @RequestBody STDSigninRequestBody requestBody) {
         if (LOGGER.isDebugEnabled()) {

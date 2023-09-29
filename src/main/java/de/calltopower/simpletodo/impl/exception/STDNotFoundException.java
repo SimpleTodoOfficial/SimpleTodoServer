@@ -13,17 +13,14 @@ public class STDNotFoundException extends RuntimeException implements STDExcepti
 
     private static final long serialVersionUID = -1932271206882271621L;
 
-    @SuppressWarnings("javadoc")
     public STDNotFoundException() {
         super();
     }
 
-    @SuppressWarnings("javadoc")
     public STDNotFoundException(String msg) {
         super(msg);
     }
 
-    @SuppressWarnings("javadoc")
     public STDNotFoundException(Exception e) {
         super(e);
     }

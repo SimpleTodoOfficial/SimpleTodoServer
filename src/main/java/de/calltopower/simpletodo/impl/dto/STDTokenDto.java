@@ -20,27 +20,21 @@ import lombok.Data;
 @JsonInclude(Include.NON_EMPTY)
 public class STDTokenDto implements STDDto<STDTokenModel> {
 
-    @SuppressWarnings("javadoc")
     @JsonProperty
     public String token;
 
-    @SuppressWarnings("javadoc")
     @JsonProperty
     public UUID id;
 
-    @SuppressWarnings("javadoc")
     @JsonProperty
     public String username;
 
-    @SuppressWarnings("javadoc")
     @JsonProperty
     public String email;
 
-    @SuppressWarnings("javadoc")
     @JsonProperty
     public Boolean statusVerified;
 
-    @SuppressWarnings("javadoc")
     @JsonProperty
     public Set<String> roles;
 

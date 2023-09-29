@@ -58,7 +58,6 @@ public class STDTodoController implements STDController {
         this.todoService = todoService;
     }
 
-    @SuppressWarnings("javadoc")
     @GetMapping(path = "/{wsId}/{lId}", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public Set<STDTodoDto> getAllForList(@NotNull @PathVariable(name = "wsId") String wsId,
@@ -70,7 +69,6 @@ public class STDTodoController implements STDController {
         return todoDtoService.convert(todoService.getAllTodos(userDetails, wsId, lId));
     }
 
-    @SuppressWarnings("javadoc")
     @GetMapping(path = "/{wsId}/{lId}/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public STDTodoDto getTodo(@NotNull @PathVariable(name = "wsId") String wsId,
@@ -83,7 +81,6 @@ public class STDTodoController implements STDController {
         return todoDtoService.convert(todoService.getTodo(userDetails, wsId, lId, id));
     }
 
-    @SuppressWarnings("javadoc")
     @PostMapping(path = "/{wsId}/{lId}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public STDTodoDto createTodo(@NotNull @PathVariable(name = "wsId") String wsId,
@@ -96,7 +93,6 @@ public class STDTodoController implements STDController {
         return todoDtoService.convert(todoService.createTodo(userDetails, wsId, lId, requestBody));
     }
 
-    @SuppressWarnings("javadoc")
     @PutMapping(path = "/{wsId}/{lId}/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public STDTodoDto updateTodo(@NotNull @PathVariable(name = "wsId") String wsId,
@@ -109,7 +105,6 @@ public class STDTodoController implements STDController {
         return todoDtoService.convert(todoService.updateTodo(userDetails, wsId, lId, id, requestBody));
     }
 
-    @SuppressWarnings("javadoc")
     @PutMapping(path = "/{wsId}/{lId}/{id}/move", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public STDTodoDto moveTodo(@NotNull @PathVariable(name = "wsId") String wsId,
@@ -123,7 +118,6 @@ public class STDTodoController implements STDController {
         return todoDtoService.convert(todoService.moveTodo(userDetails, wsId, lId, id, requestBody));
     }
 
-    @SuppressWarnings("javadoc")
     @DeleteMapping(path = "/{wsId}/{lId}/{id}")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public void deleteTodo(@NotNull @PathVariable(name = "wsId") String wsId,

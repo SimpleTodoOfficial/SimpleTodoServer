@@ -66,7 +66,6 @@ public class STDUserController implements STDController {
         this.todoDtoService = todoDtoService;
     }
 
-    @SuppressWarnings("javadoc")
     @GetMapping(path = "", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public Set<STDUserDto> getAll(@AuthenticationPrincipal UserDetails userDetails) {
@@ -77,7 +76,6 @@ public class STDUserController implements STDController {
         return userDtoService.convert(userService.getAllUsers(userDetails));
     }
 
-    @SuppressWarnings("javadoc")
     @GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public STDUserDto getUser(@NotNull @PathVariable(name = "id") String id,
@@ -93,7 +91,6 @@ public class STDUserController implements STDController {
         }
     }
 
-    @SuppressWarnings("javadoc")
     @GetMapping(path = "/{id}/duetodos", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public Set<STDTodoDto> getDueTodos(@NotNull @PathVariable(name = "id") String id,
@@ -105,7 +102,6 @@ public class STDUserController implements STDController {
         return todoDtoService.convert(userService.getDueTodosForUser(userDetails, id));
     }
 
-    @SuppressWarnings("javadoc")
     @PutMapping(path = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public STDUserDto updateUser(@NotNull @PathVariable(name = "id") String id,
@@ -117,7 +113,6 @@ public class STDUserController implements STDController {
         return userDtoService.convert(userService.updateUser(userDetails, id, requestBody));
     }
 
-    @SuppressWarnings("javadoc")
     @DeleteMapping(path = "/{id}")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public void deleteUser(@NotNull @PathVariable(name = "id") String id,
@@ -129,7 +124,6 @@ public class STDUserController implements STDController {
         userService.deleteUser(userDetails, id);
     }
 
-    @SuppressWarnings("javadoc")
     @PostMapping(path = "/password/forgot", consumes = MediaType.APPLICATION_JSON_VALUE)
     public void forgotPassword(@Valid @RequestBody STDForgotPasswordRequestBody requestBody) {
         if (LOGGER.isDebugEnabled()) {
@@ -139,7 +133,6 @@ public class STDUserController implements STDController {
         userService.forgotPassword(requestBody);
     }
 
-    @SuppressWarnings("javadoc")
     @PutMapping(path = "/password/reset/{id}")
     public void resetPassword(@NotNull @PathVariable(name = "id") String id) {
         if (LOGGER.isDebugEnabled()) {
@@ -149,7 +142,6 @@ public class STDUserController implements STDController {
         userService.resetPassword(id);
     }
 
-    @SuppressWarnings("javadoc")
     @PutMapping(path = "/verify/resend")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public void verifyResend(@AuthenticationPrincipal UserDetails userDetails) {
@@ -160,7 +152,6 @@ public class STDUserController implements STDController {
         userService.resendVerification(userDetails);
     }
 
-    @SuppressWarnings("javadoc")
     @PutMapping(path = "/verify/{id}")
     public void verify(@NotNull @PathVariable(name = "id") String id) {
         if (LOGGER.isDebugEnabled()) {

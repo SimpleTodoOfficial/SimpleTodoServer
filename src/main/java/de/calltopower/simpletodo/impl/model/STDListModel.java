@@ -65,7 +65,7 @@ public class STDListModel implements Serializable, STDModel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "uuid2")
-    @GenericGenerator(name = "uuid2", strategy = "uuid2")
+    @GenericGenerator(name = "uuid2")
     @Column(name = "NR_ID", columnDefinition = "BINARY(16)")
     private UUID id;
 

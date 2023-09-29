@@ -19,7 +19,6 @@ import lombok.Data;
 @JsonInclude(Include.NON_EMPTY)
 public class STDLanguagesDto implements STDDto<STDLanguagesModel> {
 
-    @SuppressWarnings("javadoc")
     @JsonProperty
     public Map<String, String> languages;
 

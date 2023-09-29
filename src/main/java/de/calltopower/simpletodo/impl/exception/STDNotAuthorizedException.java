@@ -13,17 +13,14 @@ public class STDNotAuthorizedException extends RuntimeException implements STDEx
 
     private static final long serialVersionUID = -5490671963188802180L;
 
-    @SuppressWarnings("javadoc")
     public STDNotAuthorizedException() {
         super();
     }
 
-    @SuppressWarnings("javadoc")
     public STDNotAuthorizedException(String msg) {
         super(msg);
     }
 
-    @SuppressWarnings("javadoc")
     public STDNotAuthorizedException(Exception e) {
         super(e);
     }

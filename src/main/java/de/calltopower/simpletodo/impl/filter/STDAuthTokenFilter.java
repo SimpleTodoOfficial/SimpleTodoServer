@@ -57,7 +57,7 @@ public class STDAuthTokenFilter extends OncePerRequestFilter implements STDFilte
         String headerAuth = request.getHeader("Authorization");
 
         if (StringUtils.hasText(headerAuth) && headerAuth.startsWith("Bearer ")) {
-            return headerAuth.substring(7, headerAuth.length());
+            return headerAuth.substring("Bearer ".length(), headerAuth.length());
         }
 
         return null;

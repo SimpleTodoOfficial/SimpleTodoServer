@@ -21,31 +21,24 @@ import lombok.Data;
 @JsonInclude(Include.NON_EMPTY)
 public class STDListDto implements STDDto<STDListModel> {
 
-    @SuppressWarnings("javadoc")
     @JsonProperty
     public UUID id;
 
-    @SuppressWarnings("javadoc")
     @JsonProperty
     public Date createdDate;
 
-    @SuppressWarnings("javadoc")
     @JsonProperty
     public String name;
 
-    @SuppressWarnings("javadoc")
     @JsonProperty
     public UUID workspaceId;
 
-    @SuppressWarnings("javadoc")
     @JsonProperty
     public String workspaceName;
 
-    @SuppressWarnings("javadoc")
     @JsonProperty
     public Set<STDTodoDto> todos;
 
-    @SuppressWarnings("javadoc")
     @JsonProperty
     private String jsonData;
 

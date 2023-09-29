@@ -54,7 +54,6 @@ public class STDWorkspaceController implements STDController {
         this.workspaceService = workspaceService;
     }
 
-    @SuppressWarnings("javadoc")
     @GetMapping(path = "", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public Set<STDWorkspaceDto> getAllForUser(@AuthenticationPrincipal UserDetails userDetails) {
@@ -65,7 +64,6 @@ public class STDWorkspaceController implements STDController {
         return workspaceDtoService.convert(workspaceService.getAllWorkspacesForUser(userDetails));
     }
 
-    @SuppressWarnings("javadoc")
     @GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public STDWorkspaceDto getWorkspace(@NotNull @PathVariable(name = "id") String id,
@@ -77,7 +75,6 @@ public class STDWorkspaceController implements STDController {
         return workspaceDtoService.convert(workspaceService.getWorkspace(userDetails, id));
     }
 
-    @SuppressWarnings("javadoc")
     @PostMapping(path = "", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public STDWorkspaceDto createWorkspace(@NotNull @RequestBody STDWorkspaceRequestBody requestBody,
@@ -89,7 +86,6 @@ public class STDWorkspaceController implements STDController {
         return workspaceDtoService.convert(workspaceService.createWorkspace(userDetails, requestBody));
     }
 
-    @SuppressWarnings("javadoc")
     @PutMapping(path = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public STDWorkspaceDto updateWorkspace(@NotNull @PathVariable(name = "id") String id,
@@ -102,7 +98,6 @@ public class STDWorkspaceController implements STDController {
         return workspaceDtoService.convert(workspaceService.updateWorkspace(userDetails, id, requestBody));
     }
 
-    @SuppressWarnings("javadoc")
     @DeleteMapping(path = "/{id}")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public void deleteWorkspace(@NotNull @PathVariable(name = "id") String id,

@@ -57,7 +57,6 @@ public class STDListController implements STDController {
         this.listService = listService;
     }
 
-    @SuppressWarnings("javadoc")
     @GetMapping(path = "/{wsId}", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public Set<STDListDto> getAllListsForWorkspace(@NotNull @PathVariable(name = "wsId") String wsId,
@@ -69,7 +68,6 @@ public class STDListController implements STDController {
         return listDtoService.convert(listService.getAllListsForWorkspace(userDetails, wsId));
     }
 
-    @SuppressWarnings("javadoc")
     @GetMapping(path = "/{wsId}/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public STDListDto getList(@NotNull @PathVariable(name = "wsId") String wsId,
@@ -81,7 +79,6 @@ public class STDListController implements STDController {
         return listDtoService.convert(listService.getList(userDetails, wsId, id));
     }
 
-    @SuppressWarnings("javadoc")
     @PostMapping(path = "/{wsId}", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public STDListDto createList(@NotNull @PathVariable(name = "wsId") String wsId,
@@ -93,7 +90,6 @@ public class STDListController implements STDController {
         return listDtoService.convert(listService.createList(userDetails, wsId, requestBody));
     }
 
-    @SuppressWarnings("javadoc")
     @PutMapping(path = "/{wsId}/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public STDListDto updateList(@NotNull @PathVariable(name = "wsId") String wsId,
@@ -106,7 +102,6 @@ public class STDListController implements STDController {
         return listDtoService.convert(listService.updateList(userDetails, wsId, id, requestBody));
     }
 
-    @SuppressWarnings("javadoc")
     @PutMapping(path = "/{wsId}/{id}/move", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public STDListDto moveList(@NotNull @PathVariable(name = "wsId") String wsId,
@@ -119,7 +114,6 @@ public class STDListController implements STDController {
         return listDtoService.convert(listService.moveList(userDetails, wsId, id, requestBody));
     }
 
-    @SuppressWarnings("javadoc")
     @DeleteMapping(path = "/{wsId}/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public void deleteList(@NotNull @PathVariable(name = "wsId") String wsId,

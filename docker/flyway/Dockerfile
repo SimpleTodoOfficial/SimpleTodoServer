@@ -1,3 +1,3 @@
-FROM flyway/flyway:9.16.1-alpine
+FROM flyway/flyway:9.22.2-alpine
 
 COPY ./docker/flyway/sql /flyway/sql

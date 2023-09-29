@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -148,10 +149,10 @@ public class STDAuthService implements STDService {
 
 		Authentication authentication;
 		try {
-			authentication = authenticationManager.authenticate(
-					new UsernamePasswordAuthenticationToken(requestBody.getUsername(), requestBody.getPassword()));
-		} catch (Exception ex) {
-			LOGGER.error("Could not authenticate");
+			UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(requestBody.getUsername(), requestBody.getPassword());
+            authentication = authenticationManager.authenticate(authToken);
+		} catch (AuthenticationException ex) {
+			LOGGER.error("Could not authenticate", ex);
 			throw new STDUserException("Could not authenticate");
 		}
 

@@ -35,7 +35,6 @@ public class STDConnectionController implements STDController {
         // Nothing to see here...
     }
 
-    @SuppressWarnings("javadoc")
     @GetMapping(path = "/available", produces = MediaType.APPLICATION_JSON_VALUE)
     public boolean checkAvailability(@AuthenticationPrincipal UserDetails userDetails) {
         if (LOGGER.isDebugEnabled()) {
@@ -45,7 +44,6 @@ public class STDConnectionController implements STDController {
         return true;
     }
 
-    @SuppressWarnings("javadoc")
     @GetMapping(path = "/authorized", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public boolean checkAuthorized(@AuthenticationPrincipal UserDetails userDetails) {
