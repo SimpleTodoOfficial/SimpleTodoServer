@@ -1,8 +1,9 @@
 {
 	"info": {
-		"_postman_id": "fd0279c0-2af9-4576-8951-ebf2abac2209",
+		"_postman_id": "4170a202-f58f-479c-9771-5960d95f7eea",
 		"name": "SimpleTODO",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "1783822"
 	},
 	"item": [
 		{
@@ -161,6 +162,89 @@
 								"users",
 								"verify",
 								"resend"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "/connection",
+			"item": [
+				{
+					"name": "http://localhost:9090/api/connection/available",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBZG1pbiIsImlhdCI6MTY5NTk4NjE3MCwiZXhwIjoxNjk2MDcyNTcwfQ.eqWdEa0a-P5p-XxEaFkG9ztVWvQJNoGwPTgW_gyaW53gcBEDuaewmqA9nfAc2OxfYLCSkClQnhVrrSh_-zmQMw",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:9090/api/connection/available",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9090",
+							"path": [
+								"api",
+								"connection",
+								"available"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:9090/api/connection/authorized",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBZG1pbiIsImlhdCI6MTY5NTk4NjE3MCwiZXhwIjoxNjk2MDcyNTcwfQ.eqWdEa0a-P5p-XxEaFkG9ztVWvQJNoGwPTgW_gyaW53gcBEDuaewmqA9nfAc2OxfYLCSkClQnhVrrSh_-zmQMw",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:9090/api/connection/authorized",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9090",
+							"path": [
+								"api",
+								"connection",
+								"authorized"
 							]
 						}
 					},
@@ -328,7 +412,7 @@
 			"name": "/list",
 			"item": [
 				{
-					"name": "http://localhost:9090/api/lists/WSID",
+					"name": "http://localhost:9090/api/workspaces/WSID/lists",
 					"request": {
 						"method": "GET",
 						"header": [
@@ -339,7 +423,7 @@
 							}
 						],
 						"url": {
-							"raw": "http://localhost:9090/api/lists/WSID",
+							"raw": "http://localhost:9090/api/workspaces/WSID/lists",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -347,15 +431,16 @@
 							"port": "9090",
 							"path": [
 								"api",
-								"lists",
-								"WSID"
+								"workspaces",
+								"WSID",
+								"lists"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "http://localhost:9090/api/lists/WSID/LID",
+					"name": "http://localhost:9090/api/workspaces/WSID/lists/LID",
 					"request": {
 						"method": "GET",
 						"header": [
@@ -366,7 +451,7 @@
 							}
 						],
 						"url": {
-							"raw": "http://localhost:9090/api/lists/WSID/LID",
+							"raw": "http://localhost:9090/api/workspaces/WSID/lists/LID",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -374,8 +459,9 @@
 							"port": "9090",
 							"path": [
 								"api",
-								"lists",
+								"workspaces",
 								"WSID",
+								"lists",
 								"LID"
 							]
 						}
@@ -383,7 +469,7 @@
 					"response": []
 				},
 				{
-					"name": "http://localhost:9090/api/lists/WSID",
+					"name": "http://localhost:9090/api/workspaces/WSID/lists",
 					"request": {
 						"method": "POST",
 						"header": [
@@ -403,7 +489,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:9090/api/lists/WSID",
+							"raw": "http://localhost:9090/api/workspaces/WSID/lists",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -411,15 +497,16 @@
 							"port": "9090",
 							"path": [
 								"api",
-								"lists",
-								"WSID"
+								"workspaces",
+								"WSID",
+								"lists"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "http://localhost:9090/api/lists/WID/LID",
+					"name": "http://localhost:9090/api/workspaces/WID/list/LID",
 					"request": {
 						"method": "PUT",
 						"header": [
@@ -439,7 +526,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:9090/api/lists/WSID/LID",
+							"raw": "http://localhost:9090/api/workspaces/WSID/lists/LID",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -447,8 +534,9 @@
 							"port": "9090",
 							"path": [
 								"api",
-								"lists",
+								"workspaces",
 								"WSID",
+								"lists",
 								"LID"
 							]
 						}
@@ -456,7 +544,7 @@
 					"response": []
 				},
 				{
-					"name": "http://localhost:9090/api/lists/WID/LID/move",
+					"name": "http://localhost:9090/api/workspaces/WID/list/LID/move",
 					"request": {
 						"method": "PUT",
 						"header": [
@@ -476,7 +564,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:9090/api/lists/WSID/LID/move",
+							"raw": "http://localhost:9090/api/workspaces/WSID/lists/LID/move",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -484,8 +572,9 @@
 							"port": "9090",
 							"path": [
 								"api",
-								"lists",
+								"workspaces",
 								"WSID",
+								"lists",
 								"LID",
 								"move"
 							]
@@ -494,7 +583,7 @@
 					"response": []
 				},
 				{
-					"name": "http://localhost:9090/api/lists/WSID/LID",
+					"name": "http://localhost:9090/api/workspaces/WSID/lists/LID",
 					"request": {
 						"method": "DELETE",
 						"header": [
@@ -505,7 +594,7 @@
 							}
 						],
 						"url": {
-							"raw": "http://localhost:9090/api/lists/WSID/LID",
+							"raw": "http://localhost:9090/api/workspaces/WSID/lists/LID",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -513,8 +602,9 @@
 							"port": "9090",
 							"path": [
 								"api",
-								"lists",
+								"workspaces",
 								"WSID",
+								"lists",
 								"LID"
 							]
 						}
@@ -527,7 +617,7 @@
 			"name": "/todo",
 			"item": [
 				{
-					"name": "http://localhost:9090/api/todos/WSID/LID",
+					"name": "http://localhost:9090/api/workspaces/WSID/lists/LID/todos",
 					"request": {
 						"method": "GET",
 						"header": [
@@ -538,7 +628,7 @@
 							}
 						],
 						"url": {
-							"raw": "http://localhost:9090/api/todos/WSID/LID",
+							"raw": "http://localhost:9090/api/workspaces/WSID/lists/LID/todos",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -546,16 +636,18 @@
 							"port": "9090",
 							"path": [
 								"api",
-								"todos",
+								"workspaces",
 								"WSID",
-								"LID"
+								"lists",
+								"LID",
+								"todos"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "http://localhost:9090/api/todos/WSID/LID/TID",
+					"name": "http://localhost:9090/api/workspaces/WSID/lists/LID/todos/TID",
 					"request": {
 						"method": "GET",
 						"header": [
@@ -566,7 +658,7 @@
 							}
 						],
 						"url": {
-							"raw": "http://localhost:9090/api/todos/WSID/LID/TID",
+							"raw": "http://localhost:9090/api/workspaces/WSID/lists/LID/todos/TID",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -574,9 +666,11 @@
 							"port": "9090",
 							"path": [
 								"api",
-								"todos",
+								"workspaces",
 								"WSID",
+								"lists",
 								"LID",
+								"todos",
 								"TID"
 							]
 						}
@@ -584,7 +678,7 @@
 					"response": []
 				},
 				{
-					"name": "http://localhost:9090/api/todos/WSID/LID",
+					"name": "http://localhost:9090/api/workspaces/WSID/lists/LID/todos",
 					"request": {
 						"method": "POST",
 						"header": [
@@ -604,7 +698,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:9090/api/todos/WSID/LID",
+							"raw": "http://localhost:9090/api/workspaces/WSID/lists/LID/todos",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -612,16 +706,18 @@
 							"port": "9090",
 							"path": [
 								"api",
-								"todos",
+								"workspaces",
 								"WSID",
-								"LID"
+								"lists",
+								"LID",
+								"todos"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "http://localhost:9090/api/todos/WSID/LID/TID",
+					"name": "http://localhost:9090/api/workspaces/WSID/lists/LID/todos/TID",
 					"request": {
 						"method": "PUT",
 						"header": [
@@ -641,7 +737,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:9090/api/todos/WSID/LID/TID",
+							"raw": "http://localhost:9090/api/workspaces/WSID/lists/LID/todos/TID",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -649,9 +745,11 @@
 							"port": "9090",
 							"path": [
 								"api",
-								"todos",
+								"workspaces",
 								"WSID",
+								"lists",
 								"LID",
+								"todos",
 								"TID"
 							]
 						}
@@ -659,7 +757,7 @@
 					"response": []
 				},
 				{
-					"name": "http://localhost:9090/api/todos/WSID/LID/TID/move",
+					"name": "http://localhost:9090/api/workspaces/WSID/lists/LID/todos/TID/move",
 					"request": {
 						"method": "PUT",
 						"header": [
@@ -679,7 +777,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:9090/api/todos/WSID/LID/TID/move",
+							"raw": "http://localhost:9090/api/workspaces/WSID/lists/LID/todos/TID/move",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -687,9 +785,11 @@
 							"port": "9090",
 							"path": [
 								"api",
-								"todos",
+								"workspaces",
 								"WSID",
+								"lists",
 								"LID",
+								"todos",
 								"TID",
 								"move"
 							]
@@ -698,7 +798,7 @@
 					"response": []
 				},
 				{
-					"name": "http://localhost:9090/api/todos/WSID/LID/TID",
+					"name": "http://localhost:9090/api/workspaces/WSID/lists/LID/todos/TID",
 					"request": {
 						"method": "DELETE",
 						"header": [
@@ -709,7 +809,7 @@
 							}
 						],
 						"url": {
-							"raw": "http://localhost:9090/api/todos/WSID/LID/TID",
+							"raw": "http://localhost:9090/api/workspaces/WSID/lists/LID/todos/TID",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -717,9 +817,11 @@
 							"port": "9090",
 							"path": [
 								"api",
-								"todos",
+								"workspaces",
 								"WSID",
+								"lists",
 								"LID",
+								"todos",
 								"TID"
 							]
 						}
