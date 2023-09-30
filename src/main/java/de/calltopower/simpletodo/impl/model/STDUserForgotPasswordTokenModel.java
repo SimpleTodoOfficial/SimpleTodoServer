@@ -3,7 +3,6 @@ package de.calltopower.simpletodo.impl.model;
 import java.io.Serializable;
 import java.util.UUID;
 
-import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.UuidGenerator;
 import org.hibernate.annotations.UuidGenerator.Style;
 
