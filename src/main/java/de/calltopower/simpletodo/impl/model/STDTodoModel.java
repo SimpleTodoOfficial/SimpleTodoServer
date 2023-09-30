@@ -7,6 +7,8 @@ import java.util.UUID;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.UuidGenerator;
+import org.hibernate.annotations.UuidGenerator.Style;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
@@ -51,7 +53,7 @@ public class STDTodoModel implements Serializable, STDModel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "uuid2")
-    @GenericGenerator(name = "uuid2")
+    @UuidGenerator(style = Style.TIME)
     @Column(name = "NR_ID", columnDefinition = "BINARY(16)")
     private UUID id;
 

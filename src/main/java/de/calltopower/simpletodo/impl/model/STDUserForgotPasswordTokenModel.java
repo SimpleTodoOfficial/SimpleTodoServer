@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.UUID;
 
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.UuidGenerator;
+import org.hibernate.annotations.UuidGenerator.Style;
 
 import de.calltopower.simpletodo.api.model.STDModel;
 import jakarta.persistence.Column;
@@ -41,7 +43,7 @@ public class STDUserForgotPasswordTokenModel implements Serializable, STDModel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "uuid2")
-    @GenericGenerator(name = "uuid2")
+    @UuidGenerator(style = Style.TIME)
     @Column(name = "NR_ID", columnDefinition = "BINARY(16)")
     private UUID id;
 
