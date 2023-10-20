@@ -138,6 +138,7 @@
     "signup.component.information": "Informationen bezüglich Privatsphäre und Sicherheit deiner Daten (löscht bei Klick deine aktuellen Eingaben)",
     "todos.list.component.todos": "Todos",
     "todos.list.component.action.show_all": "Alle anzeigen",
+    "todos.list.component.action.delete_all": "Alle löschen",
     "todos.list.component.todos_none": "Noch keine Todos vorhanden.",
     "todos.list.component.action.todos_create": "Erstelle jetzt eins.",
     "todos.list.component.todos_hidden": "Es sind versteckte Todos vorhanden.",

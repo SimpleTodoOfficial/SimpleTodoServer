@@ -18,7 +18,8 @@ public class STDWebMvcConfigurer implements WebMvcConfigurer, STDConfig {
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/api/**").allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS");
+        registry.addMapping("/api/**").allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
+                                      .allowedOriginPatterns("http://localhost:[*]");
     }
 
 }
