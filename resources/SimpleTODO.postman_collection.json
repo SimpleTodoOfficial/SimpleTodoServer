@@ -182,7 +182,7 @@
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "Bearer <TOKEN>",
+								"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBZG1pbiIsImlhdCI6MTY5NTk4NjE3MCwiZXhwIjoxNjk2MDcyNTcwfQ.eqWdEa0a-P5p-XxEaFkG9ztVWvQJNoGwPTgW_gyaW53gcBEDuaewmqA9nfAc2OxfYLCSkClQnhVrrSh_-zmQMw",
 								"type": "text"
 							}
 						],
@@ -221,7 +221,7 @@
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "Bearer <TOKEN>",
+								"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBZG1pbiIsImlhdCI6MTY5NTk4NjE3MCwiZXhwIjoxNjk2MDcyNTcwfQ.eqWdEa0a-P5p-XxEaFkG9ztVWvQJNoGwPTgW_gyaW53gcBEDuaewmqA9nfAc2OxfYLCSkClQnhVrrSh_-zmQMw",
 								"type": "text"
 							}
 						],
@@ -289,7 +289,7 @@
 							{
 								"key": "Authorization",
 								"type": "text",
-								"value": "Bearer <TOKEN>"
+								"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJVc2VyIDEiLCJpYXQiOjE1OTgzNzI3NTUsImV4cCI6MTU5ODQ1OTE1NX0.-lFmM4fF_WwvHG4s4lJ97o93-JqVuq-cjUx0qtmvH3gNUh9cCeb7J57Ot-KMm6XDXX30EXtHbs5BlJ_VPYeP3A"
 							}
 						],
 						"url": {
@@ -823,6 +823,36 @@
 								"LID",
 								"todos",
 								"TID"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:9090/api/workspaces/WSID/lists/LID/todos",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer TOKEN"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:9090/api/workspaces/WSID/lists/LID/todos",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9090",
+							"path": [
+								"api",
+								"workspaces",
+								"WSID",
+								"lists",
+								"LID",
+								"todos"
 							]
 						}
 					},
